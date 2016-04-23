@@ -1,4 +1,5 @@
 #include <irrlicht/irrlicht.h>
+#include <irrlicht/driverChoice.h>
 
 //#pragma comment(lib, "Irrlicht.lib")
 
@@ -10,7 +11,8 @@ using namespace irr;
 //using namespace gui;
 
 int main() {
-  IrrlichtDevice *device = createDevice(video::EDT_SOFTWARE, core::dimension2d<u32>(512, 384), 16, false, false, false, 0);
+  // Uses driverChoiceConsole() from driverChoice.h
+  IrrlichtDevice *device = createDevice(driverChoiceConsole(), core::dimension2d<u32>(512, 384), 16, false, false, false, 0);
   device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
   video::IVideoDriver* driver = device->getVideoDriver();
   scene::ISceneManager* smgr = device->getSceneManager();
