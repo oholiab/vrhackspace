@@ -32,7 +32,8 @@ int main() {
     node->setMaterialTexture( 0, driver->getTexture("models/sydney.bmp") );
   }
   //smgr->addLightSceneNode();
-  scene::ICameraSceneNode *camera = smgr->addCameraSceneNode(0, core::vector3df(0,30,-40), core::vector3df(0,5,0));
+  //scene::ICameraSceneNode *camera = smgr->addCameraSceneNode(0, core::vector3df(0,30,-40), core::vector3df(0,5,0));
+  scene::ICameraSceneNode *camera = smgr->addCameraSceneNodeFPS();
   //camera->setTarget(cube->getAbsolutePosition());
   while(device->run()) {
     driver->beginScene(true, true, video::SColor(255,100,101,140));
