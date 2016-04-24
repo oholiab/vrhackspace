@@ -40,8 +40,8 @@ int main() {
   device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
   scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");
   scene::IMeshSceneNode* levelNode = 0;
+  scene::ITriangleSelector* selector = 0;
   if (levelMesh) {
-    scene::ITriangleSelector* selector = 0;
     levelNode = smgr->addOctreeSceneNode(levelMesh->getMesh(0), 0, IDFlag_IsPickable);
 //      node = smgr->addMeshSceneNode(mesh->getMesh(0));
     if(levelNode){
@@ -52,12 +52,25 @@ int main() {
     }
   }
 
-  scene::ICameraSceneNode *camera = smgr->addCameraSceneNodeFPS();
+  //Create camera and pin it to the floor
+  scene::ICameraSceneNode *camera = smgr->addCameraSceneNodeFPS(0, 100.0f, .3f, ID_IsNotPickable, 0, 0, true, 3.f);
+  camera->setPosition(core::vector3df(50,50,-60));
+
+  //Add collision to the camera
+  if (selector) {
+    scene::ISceneNodeAnimator* anim = smgr->createCollisionResponseAnimator(
+      selector, camera, core::vector3df(30,50,30),
+      core::vector3df(0,-10,0), core::vector3df(0,30,0));
+    selector->drop(); // As soon as we're done with the selector, drop it.
+    camera->addAnimator(anim);
+    anim->drop();  // And likewise, drop the animator when we're done referring to it.
+  }
   device->getCursorControl()->setVisible(false);
   //camera->setTarget(cube->getAbsolutePosition());
   int lastFPS = -1;
   while(device->run()) {
     if(device->isWindowActive()){
+      // TODO: maybe this should be billboard based?
       //int fps = driver->getFPS();
       //core::stringw status;
       //if(fps != lastFPS){
