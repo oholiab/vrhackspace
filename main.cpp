@@ -26,13 +26,14 @@ int main() {
   font->draw(L"I'm a little teapot", core::rect<s32>(10,10,200,22), video::SColor(255,255,255,255));
   guienv->addStaticText(L"Hello World! This is the Irrlicht Software engine!",
          core::rect<int>(10,10,200,22), true);
-  scene::IAnimatedMesh* mesh = smgr->getMesh("models/sydney.md2");
-  if(!mesh){
+  device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
+  scene::IAnimatedMesh* sydney = smgr->getMesh("models/sydney.md2");
+  if(!sydney){
     device->drop();
     return(1);
   }
   scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(150,10,10));
-  scene::IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( mesh );
+  scene::IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( sydney );
   if (node) {
     node->setMaterialFlag(video::EMF_LIGHTING, false);
     node->setFrameLoop(0, 310); 
