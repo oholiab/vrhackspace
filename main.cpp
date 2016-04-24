@@ -30,18 +30,13 @@ int main() {
   // Uses driverChoiceConsole() from driverChoice.h
   IrrlichtDevice *device = createDevice(driverChoiceConsole(), core::dimension2d<u32>(512, 384), 16, false, false, false, 0);
   device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
+
+  // set up video driver, scene manager and gui environment
   video::IVideoDriver* driver = device->getVideoDriver();
   scene::ISceneManager* smgr = device->getSceneManager();
   gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
-  //gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
-  //gui::IGUIFont* font2 = device->getGUIEnvironment()->getFont("../../media/fonthaettenschweiler.bmp");
-  //if(!font){
-  //  device->drop();
-  //  return(1);
-  //}
-  //font->draw(L"I'm a little teapot", core::rect<s32>(10,10,200,22), video::SColor(255,255,255,255));
-  //guienv->addStaticText(L"Hello World! This is the Irrlicht Software engine!",
-  //       core::rect<int>(10,10,200,22), true);
+
+  // Create the level and the collision selector
   device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
   scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");
   scene::IMeshSceneNode* levelNode = 0;
@@ -57,20 +52,6 @@ int main() {
     }
   }
 
-  //scene::IAnimatedMesh* sydneyMesh = smgr->getMesh("models/sydney.md2");
-  //if(!sydneyMesh){
-  //  device->drop();
-  //  return(1);
-  //}
-  //scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(150,10,10));
-  //scene::IAnimatedMeshSceneNode* sydneyNode = smgr->addAnimatedMeshSceneNode( sydneyMesh );
-  //if (sydneyNode) {
-  //  sydneyNode->setMaterialFlag(video::EMF_LIGHTING, false);
-  //  sydneyNode->setFrameLoop(0, 310); 
-  //  sydneyNode->setMaterialTexture( 0, driver->getTexture("models/sydney.bmp") );
-  //}
-  //smgr->addLightSceneNode();
-  //scene::ICameraSceneNode *camera = smgr->addCameraSceneNode(0, core::vector3df(0,30,-40), core::vector3df(0,5,0));
   scene::ICameraSceneNode *camera = smgr->addCameraSceneNodeFPS();
   device->getCursorControl()->setVisible(false);
   //camera->setTarget(cube->getAbsolutePosition());
