@@ -44,12 +44,16 @@ int main() {
   //       core::rect<int>(10,10,200,22), true);
   device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
   scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");
-  scene::ISceneNode* levelNode = 0;
+  scene::IMeshSceneNode* levelNode = 0;
   if (levelMesh) {
+    scene::ITriangleSelector* selector = 0;
     levelNode = smgr->addOctreeSceneNode(levelMesh->getMesh(0), 0, IDFlag_IsPickable);
 //      node = smgr->addMeshSceneNode(mesh->getMesh(0));
     if(levelNode){
-      levelNode->setPosition(core::vector3df(-1300,-144,-1249));
+      levelNode->setPosition(core::vector3df(-1350,-130,-1400));
+      selector = smgr->createOctreeTriangleSelector(
+                 levelNode->getMesh(), levelNode, 128);
+      levelNode->setTriangleSelector(selector);
     }
   }
 
