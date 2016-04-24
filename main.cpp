@@ -9,6 +9,22 @@ using namespace irr;
 //using namespace video;
 //using namespace io;
 //using namespace gui;
+//
+enum {
+  // I use this ISceneNode ID to indicate a scene node that is
+  // not pickable by getSceneNodeAndCollisionPointFromRay()
+  ID_IsNotPickable = 0,
+
+  // I use this flag in ISceneNode IDs to indicate that the
+  // scene node can be picked by ray selection.
+  IDFlag_IsPickable = 1 << 0,
+
+  // I use this flag in ISceneNode IDs to indicate that the
+  // scene node can be highlighted.  In this example, the
+  // homonids can be highlighted, but the level mesh can't.
+  IDFlag_IsHighlightable = 1 << 1
+};
+
 
 int main() {
   // Uses driverChoiceConsole() from driverChoice.h
@@ -17,35 +33,38 @@ int main() {
   video::IVideoDriver* driver = device->getVideoDriver();
   scene::ISceneManager* smgr = device->getSceneManager();
   gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
-  gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
+  //gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
   //gui::IGUIFont* font2 = device->getGUIEnvironment()->getFont("../../media/fonthaettenschweiler.bmp");
-  if(!font){
-    device->drop();
-    return(1);
-  }
-  font->draw(L"I'm a little teapot", core::rect<s32>(10,10,200,22), video::SColor(255,255,255,255));
-  guienv->addStaticText(L"Hello World! This is the Irrlicht Software engine!",
-         core::rect<int>(10,10,200,22), true);
+  //if(!font){
+  //  device->drop();
+  //  return(1);
+  //}
+  //font->draw(L"I'm a little teapot", core::rect<s32>(10,10,200,22), video::SColor(255,255,255,255));
+  //guienv->addStaticText(L"Hello World! This is the Irrlicht Software engine!",
+  //       core::rect<int>(10,10,200,22), true);
   device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
   scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");
   scene::ISceneNode* levelNode = 0;
   if (levelMesh) {
-    levelNode = smgr->addOctreeSceneNode(levelMesh->getMesh(0), 0, -1, 1024);
+    levelNode = smgr->addOctreeSceneNode(levelMesh->getMesh(0), 0, IDFlag_IsPickable);
 //      node = smgr->addMeshSceneNode(mesh->getMesh(0));
+    if(levelNode){
+      levelNode->setPosition(core::vector3df(-1300,-144,-1249));
+    }
   }
 
-  scene::IAnimatedMesh* sydneyMesh = smgr->getMesh("models/sydney.md2");
-  if(!sydneyMesh){
-    device->drop();
-    return(1);
-  }
-  scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(150,10,10));
-  scene::IAnimatedMeshSceneNode* sydneyNode = smgr->addAnimatedMeshSceneNode( sydneyMesh );
-  if (sydneyNode) {
-    sydneyNode->setMaterialFlag(video::EMF_LIGHTING, false);
-    sydneyNode->setFrameLoop(0, 310); 
-    sydneyNode->setMaterialTexture( 0, driver->getTexture("models/sydneyMesh.bmp") );
-  }
+  //scene::IAnimatedMesh* sydneyMesh = smgr->getMesh("models/sydney.md2");
+  //if(!sydneyMesh){
+  //  device->drop();
+  //  return(1);
+  //}
+  //scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(150,10,10));
+  //scene::IAnimatedMeshSceneNode* sydneyNode = smgr->addAnimatedMeshSceneNode( sydneyMesh );
+  //if (sydneyNode) {
+  //  sydneyNode->setMaterialFlag(video::EMF_LIGHTING, false);
+  //  sydneyNode->setFrameLoop(0, 310); 
+  //  sydneyNode->setMaterialTexture( 0, driver->getTexture("models/sydney.bmp") );
+  //}
   //smgr->addLightSceneNode();
   //scene::ICameraSceneNode *camera = smgr->addCameraSceneNode(0, core::vector3df(0,30,-40), core::vector3df(0,5,0));
   scene::ICameraSceneNode *camera = smgr->addCameraSceneNodeFPS();
