@@ -38,7 +38,7 @@ int main() {
 
   // Create the level and the collision selector
   device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
-  scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(150,10,10), core::vector3df(0,0,0), core::vector3df(10, 10, 1));
+  scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(150,10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
   cube->setMaterialFlag(video::EMF_LIGHTING, false);
   scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");
   scene::IMeshSceneNode* levelNode = 0;
