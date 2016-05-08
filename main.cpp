@@ -38,6 +38,8 @@ int main() {
 
   // Create the level and the collision selector
   device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
+  scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(150,10,10), core::vector3df(0,0,0), core::vector3df(10, 10, 1));
+  cube->setMaterialFlag(video::EMF_LIGHTING, false);
   scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");
   scene::IMeshSceneNode* levelNode = 0;
   scene::ITriangleSelector* selector = 0;
@@ -68,7 +70,11 @@ int main() {
   device->getCursorControl()->setVisible(false);
   //camera->setTarget(cube->getAbsolutePosition());
   int lastFPS = -1;
+  video::ITexture * texture;
   while(device->run()) {
+    device->getVideoDriver()->removeTexture(texture);
+    texture = driver->getTexture("/tmp/roomtest/shot.png");
+    cube->setMaterialTexture(0, texture);
     if(device->isWindowActive()){
       // TODO: maybe this should be billboard based?
       //int fps = driver->getFPS();

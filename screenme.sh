@@ -9,5 +9,5 @@ DISPLAY=:1 xterm &
 while true; do
   sleep 1s
   DISPLAY=:1 scrot $tmpfile
-  ln -s -f $tmpfile $outfile
+  cp $tmpfile $outfile
 done
