@@ -1,9 +1,15 @@
+levelmodel=models/map-20kdm2.pk3
+
 default: main
 
 main.o: main.cpp
 	g++ -c $<
 
-main: main.o
+$(levelmodel):
+	mkdir -p models
+	cd models && wget https://github.com/kexplo/irrlicht_ogl-es/raw/master/media/map-20kdm2.pk3
+
+main: main.o $(levelmodel)
 	g++ main.o -o main -lIrrlicht
 
 clean: main
