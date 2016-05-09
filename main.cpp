@@ -75,7 +75,7 @@ int main() {
     device->getVideoDriver()->removeTexture(texture);
     texture = driver->getTexture("/tmp/roomtest/shot.png");
     cube->setMaterialTexture(0, texture);
-    if(device->isWindowActive()){
+    //if(device->isWindowActive()){
       // TODO: maybe this should be billboard based?
       //int fps = driver->getFPS();
       //core::stringw status;
@@ -92,7 +92,7 @@ int main() {
       smgr->drawAll();
       guienv->drawAll();
       driver->endScene();
-    }
+    //}
   }
   device->drop();
   return 0;

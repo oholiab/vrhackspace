@@ -8,3 +8,9 @@ main: main.o
 
 clean: main
 	rm -rf $<
+
+image:
+	docker build -t roomtest .
+
+run:
+	docker run -v /tmp/roomtest:/roomtest --rm --name roomtest roomtest
