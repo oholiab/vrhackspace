@@ -3,3 +3,4 @@ models/*
 *.swo
 main
 *.o
+*.out
