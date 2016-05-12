@@ -1,5 +1,10 @@
 #include <irrlicht/irrlicht.h>
 #include <irrlicht/driverChoice.h>
+#include "controlterm.cpp"
+
+#define OFFSET 19
+
+const char* disp = ":1";
 
 //#pragma comment(lib, "Irrlicht.lib")
 
@@ -25,11 +30,29 @@ enum {
   IDFlag_IsHighlightable = 1 << 1
 };
 
+class VREventReceiver : public IEventReceiver {
+  public:
+    virtual bool OnEvent(const SEvent& event){
+      if(event.EventType == irr::EET_KEY_INPUT_EVENT){
+        KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+        sendKeyEvent(disp, event.KeyInput.Key);
+        printf("keycode: %d\n", event.KeyInput.Key - OFFSET);
+      }
+      return false;
+    }
+    virtual bool IsKeyDown(EKEY_CODE keyCode) const {
+      return KeyIsDown[keyCode];
+    }
+  private:
+    bool KeyIsDown[KEY_KEY_CODES_COUNT];
+};
 
 int main() {
   // Uses driverChoiceConsole() from driverChoice.h
-  IrrlichtDevice *device = createDevice(driverChoiceConsole(), core::dimension2d<u32>(512, 384), 16, false, false, false, 0);
-  device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
+
+  VREventReceiver receiver;
+  IrrlichtDevice *device = createDevice(driverChoiceConsole(), core::dimension2d<u32>(512, 384), 16, false, false, false, &receiver);
+  device->setWindowCaption(L"Grimmware VRHackspace::Mk I");
 
   // set up video driver, scene manager and gui environment
   video::IVideoDriver* driver = device->getVideoDriver();
