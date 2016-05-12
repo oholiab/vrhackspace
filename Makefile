@@ -3,7 +3,7 @@ TARGETS=main termtest.out
 
 default: $(TARGETS)
 
-termtest.out: controlterm.cpp
+termtest.out: termtest.cpp
 	g++ $< -lX11 -o termtest.out
 
 main.o: main.cpp

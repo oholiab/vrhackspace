@@ -3,9 +3,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define KEYCODE XK_m
-const char *disp;
-
 XKeyEvent createKeyEvent(Display *display,
                          Window &win,
                          Window &winRoot,
@@ -37,7 +34,7 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
-int sendKeyEvent(const char* disp)
+int sendKeyEvent(const char* disp, int keycode)
 {
   Window winFocus;
   int revert;
@@ -50,17 +47,10 @@ int sendKeyEvent(const char* disp)
   //XSetInputFocus(display, 1, revert, CurrentTime);
   XGetInputFocus(display, &winFocus, &revert);
   printf("winFocus: %d\n", winFocus);
-  XKeyEvent event = createKeyEvent(display, winFocus, winRoot, true, KEYCODE, 0);
+  XKeyEvent event = createKeyEvent(display, winFocus, winRoot, true, keycode, 0);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
-  event = createKeyEvent(display, winFocus, winRoot, false, KEYCODE, 0);
+  event = createKeyEvent(display, winFocus, winRoot, false, keycode, 0);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
   XCloseDisplay(display);
-  return 0;
-}
-
-int main(int argc, char **argv)
-{
-  disp=argv[1];
-  printf("%d\n", sendKeyEvent(disp));
   return 0;
 }
