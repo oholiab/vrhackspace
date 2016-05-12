@@ -41,8 +41,15 @@ XKeyEvent createKeyEvent(Display *display,
 
 int mapKeyCode(int irrcode){
   switch(irrcode){
+    //FIXME: only to get rid of arrow spam
+    case 37 ... 40:
+      return -1;
     case irr::KEY_BACK :
       return XK_BackSpace;
+    case irr::KEY_TAB :
+      return XK_Tab;
+    case irr::KEY_RETURN :
+      return XK_Return;
     default:
       return irrcode;
   }
@@ -50,6 +57,8 @@ int mapKeyCode(int irrcode){
 
 int sendKeyEvent(const char* disp, int keycode)
 {
+  if(-1==keycode)
+    return 0;
   printf("sendKeyEvent keycode: %d\n", keycode);
   Window winFocus;
   int revert;
