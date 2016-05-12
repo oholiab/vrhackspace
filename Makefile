@@ -1,6 +1,10 @@
 levelmodel=models/map-20kdm2.pk3
+TARGETS=main termtest.out
 
-default: main
+default: $(TARGETS)
+
+termtest.out: controlterm.cpp
+	g++ $< -lX11 -o termtest.out
 
 main.o: main.cpp
 	g++ -c $<
@@ -19,4 +23,4 @@ image:
 	docker build -t roomtest .
 
 run:
-	docker run -v /tmp/roomtest:/roomtest --rm --name roomtest roomtest
+	docker run -v /tmp/roomtest:/roomtest -v /tmp/.X11-unix:/tmp/.X11-unix --rm --name roomtest roomtest
