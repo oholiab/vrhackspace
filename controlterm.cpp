@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 #define KEYCODE XK_m
-const char *disp = ":1";
+const char *disp;
 
 XKeyEvent createKeyEvent(Display *display,
                          Window &win,
@@ -58,8 +58,9 @@ int sendKeyEvent(const char* disp)
   return 0;
 }
 
-int main()
+int main(int argc, char **argv)
 {
+  disp=argv[1];
   printf("%d\n", sendKeyEvent(disp));
   return 0;
 }
