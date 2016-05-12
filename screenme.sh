@@ -5,7 +5,9 @@ outfile=$(basename $1)
 tmpfile1=tmpshot1.png
 tmpfile2=tmpshot2.png
 sleep 3s
-DISPLAY=:1 xterm &
+DISPLAY=:1 stterm &
+sleep 3s
+DISPLAY=:1 xte 'mousemove 100 100'
 
 while true; do
   if [ "$tmpfile" = "$tmpfile1" ]; then
