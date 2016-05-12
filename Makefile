@@ -19,7 +19,7 @@ main: main.o $(levelmodel)
 clean: main
 	rm -rf $<
 
-image:
+image: Dockerfile screenme.sh
 	docker build -t roomtest .
 
 runc:
