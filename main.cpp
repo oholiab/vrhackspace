@@ -35,7 +35,8 @@ class VREventReceiver : public IEventReceiver {
     virtual bool OnEvent(const SEvent& event){
       if(event.EventType == irr::EET_KEY_INPUT_EVENT){
         KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
-        sendKeyEvent(disp, event.KeyInput.Key);
+        if(!event.KeyInput.PressedDown)
+          sendKeyEvent(disp, event.KeyInput.Key);
         printf("keycode: %d\n", event.KeyInput.Key - OFFSET);
       }
       return false;

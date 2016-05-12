@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#define RETURN 13
+#define BS 8
+#define SPACE 32
+
 XKeyEvent createKeyEvent(Display *display,
                          Window &win,
                          Window &winRoot,
