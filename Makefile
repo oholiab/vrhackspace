@@ -3,10 +3,10 @@ TARGETS=main termtest.out
 
 default: $(TARGETS)
 
-termtest.out: termtest.cpp
+termtest.out: termtest.cpp controlterm.cpp
 	g++ $< -lX11 -o termtest.out
 
-main.o: main.cpp
+main.o: main.cpp controlterm.cpp
 	g++ -c $<
 
 $(levelmodel):

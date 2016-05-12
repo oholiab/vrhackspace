@@ -34,8 +34,12 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
+int mapKeyCode(int irrcode, int xcode){
+}
+
 int sendKeyEvent(const char* disp, int keycode)
 {
+  printf("sendKeyEvent keycode: %d\n", keycode);
   Window winFocus;
   int revert;
 
@@ -43,10 +47,8 @@ int sendKeyEvent(const char* disp, int keycode)
   if(NULL == display)
     return -1;
   Window winRoot = XDefaultRootWindow(display);
-  printf("winRoot: %d\n", winRoot);
   //XSetInputFocus(display, 1, revert, CurrentTime);
   XGetInputFocus(display, &winFocus, &revert);
-  printf("winFocus: %d\n", winFocus);
   XKeyEvent event = createKeyEvent(display, winFocus, winRoot, true, keycode, 0);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
   event = createKeyEvent(display, winFocus, winRoot, false, keycode, 0);
