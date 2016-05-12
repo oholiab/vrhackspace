@@ -2,8 +2,6 @@
 #include <irrlicht/driverChoice.h>
 #include "controlterm.cpp"
 
-#define OFFSET 19
-
 const char* disp = ":1";
 
 //#pragma comment(lib, "Irrlicht.lib")
@@ -36,8 +34,8 @@ class VREventReceiver : public IEventReceiver {
       if(event.EventType == irr::EET_KEY_INPUT_EVENT){
         KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
         if(!event.KeyInput.PressedDown)
-          sendKeyEvent(disp, event.KeyInput.Key);
-        printf("keycode: %d\n", event.KeyInput.Key - OFFSET);
+          sendKeyEvent(disp, mapKeyCode(event.KeyInput.Key));
+        printf("keycode: %d\n", event.KeyInput.Key);
       }
       return false;
     }

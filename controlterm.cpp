@@ -1,5 +1,6 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
+#include <irrlicht/Keycodes.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -38,7 +39,13 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
-int mapKeyCode(int irrcode, int xcode){
+int mapKeyCode(int irrcode){
+  switch(irrcode){
+    case irr::KEY_BACK :
+      return XK_BackSpace;
+    default:
+      return irrcode;
+  }
 }
 
 int sendKeyEvent(const char* disp, int keycode)
