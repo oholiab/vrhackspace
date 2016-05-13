@@ -39,6 +39,15 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
+class X11Display {
+  public:
+    Display *display;
+    X11Display(const char* dispName);
+};
+
+X11Display::X11Display(const char* dispName) :
+  display(XOpenDisplay(dispName)){}
+
 int mapKeyCode(int irrcode){
   switch(irrcode){
     //FIXME: only to get rid of arrow spam
