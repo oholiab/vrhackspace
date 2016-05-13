@@ -45,7 +45,7 @@ class X11Display {
     Window winRoot;
     X11Display(const char* dispName);
     ~X11Display();
-    int sendKeyEvent(int keycode, bool keyDown);
+    int sendKeyEvent(int keycode, bool keyDown, int mod);
 };
 
 // TODO: fail out if display doesn't initialize
@@ -55,7 +55,7 @@ X11Display::X11Display(const char* dispName) :
 
 X11Display::~X11Display() { XCloseDisplay(display); }
 
-int X11Display::sendKeyEvent(int keycode, bool keyDown)
+int X11Display::sendKeyEvent(int keycode, bool keyDown, int mod = 0)
 {
   if(-1==keycode)
     return 0;
@@ -64,7 +64,7 @@ int X11Display::sendKeyEvent(int keycode, bool keyDown)
   int revert;
 
   XGetInputFocus(display, &winFocus, &revert);
-  XKeyEvent event = createKeyEvent(display, winFocus, winRoot, keyDown, keycode, 0);
+  XKeyEvent event = createKeyEvent(display, winFocus, winRoot, keyDown, keycode, mod);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
   return 0;
 }
@@ -84,6 +84,8 @@ int mapKeyCode(int irrcode){
       return XK_minus;
     case irr::KEY_OEM_7 :
       return XK_apostrophe;
+    case irr::KEY_LSHIFT :
+      return XK_Shift_L;
     default:
       return irrcode;
   }
