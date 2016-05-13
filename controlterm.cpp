@@ -43,10 +43,13 @@ class X11Display {
   public:
     Display *display;
     X11Display(const char* dispName);
+    ~X11Display();
 };
 
 X11Display::X11Display(const char* dispName) :
   display(XOpenDisplay(dispName)){}
+
+X11Display::~X11Display() { XCloseDisplay(display); }
 
 int mapKeyCode(int irrcode){
   switch(irrcode){
@@ -75,6 +78,8 @@ int sendKeyEvent(const char* disp, int keycode)
   printf("sendKeyEvent keycode: %d\n", keycode);
   Window winFocus;
   int revert;
+
+  X11Display X11Display(disp);
 
   Display *display = XOpenDisplay(disp);
   if(NULL == display)
