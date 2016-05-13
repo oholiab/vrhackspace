@@ -42,12 +42,15 @@ XKeyEvent createKeyEvent(Display *display,
 class X11Display {
   public:
     Display *display;
+    Window winRoot;
     X11Display(const char* dispName);
     ~X11Display();
 };
 
+// TODO: fail out if display doesn't initialize
 X11Display::X11Display(const char* dispName) :
-  display(XOpenDisplay(dispName)){}
+  display(XOpenDisplay(dispName)),
+  winRoot(XDefaultRootWindow(display)) {}
 
 X11Display::~X11Display() { XCloseDisplay(display); }
 
@@ -81,16 +84,10 @@ int sendKeyEvent(const char* disp, int keycode)
 
   X11Display xdisp(disp);
 
-  //Display *display = XOpenDisplay(disp);
-  //if(NULL == display)
-  //  return -1;
-  Window winRoot = XDefaultRootWindow(xdisp.display);
-  //XSetInputFocus(display, 1, revert, CurrentTime);
   XGetInputFocus(xdisp.display, &winFocus, &revert);
-  XKeyEvent event = createKeyEvent(xdisp.display, winFocus, winRoot, true, keycode, 0);
+  XKeyEvent event = createKeyEvent(xdisp.display, winFocus, xdisp.winRoot, true, keycode, 0);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
-  event = createKeyEvent(xdisp.display, winFocus, winRoot, false, keycode, 0);
+  event = createKeyEvent(xdisp.display, winFocus, xdisp.winRoot, false, keycode, 0);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
-  //XCloseDisplay(display);
   return 0;
 }
