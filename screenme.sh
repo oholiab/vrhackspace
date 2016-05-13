@@ -15,7 +15,6 @@ while true; do
   else
     tmpfile=$tmpfile1
   fi
-  sleep 0.01s
   DISPLAY=:1 scrot $tmpfile
   ln -s -f $tmpfile $outfile
 done
