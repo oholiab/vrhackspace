@@ -45,6 +45,7 @@ class X11Display {
     Window winRoot;
     X11Display(const char* dispName);
     ~X11Display();
+    int sendKeyEvent(int keycode, bool keyDown);
 };
 
 // TODO: fail out if display doesn't initialize
@@ -53,6 +54,20 @@ X11Display::X11Display(const char* dispName) :
   winRoot(XDefaultRootWindow(display)) {}
 
 X11Display::~X11Display() { XCloseDisplay(display); }
+
+int X11Display::sendKeyEvent(int keycode, bool keyDown)
+{
+  if(-1==keycode)
+    return 0;
+  printf("sendKeyEvent keycode: %d\n", keycode);
+  Window winFocus;
+  int revert;
+
+  XGetInputFocus(display, &winFocus, &revert);
+  XKeyEvent event = createKeyEvent(display, winFocus, winRoot, keyDown, keycode, 0);
+  XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
+  return 0;
+}
 
 int mapKeyCode(int irrcode){
   switch(irrcode){
@@ -74,20 +89,3 @@ int mapKeyCode(int irrcode){
   }
 }
 
-int sendKeyEvent(const char* disp, int keycode)
-{
-  if(-1==keycode)
-    return 0;
-  printf("sendKeyEvent keycode: %d\n", keycode);
-  Window winFocus;
-  int revert;
-
-  X11Display xdisp(disp);
-
-  XGetInputFocus(xdisp.display, &winFocus, &revert);
-  XKeyEvent event = createKeyEvent(xdisp.display, winFocus, xdisp.winRoot, true, keycode, 0);
-  XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
-  event = createKeyEvent(xdisp.display, winFocus, xdisp.winRoot, false, keycode, 0);
-  XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
-  return 0;
-}

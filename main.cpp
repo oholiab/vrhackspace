@@ -28,13 +28,14 @@ enum {
   IDFlag_IsHighlightable = 1 << 1
 };
 
+X11Display xdisp(disp);
+
 class VREventReceiver : public IEventReceiver {
   public:
     virtual bool OnEvent(const SEvent& event){
       if(event.EventType == irr::EET_KEY_INPUT_EVENT){
         KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
-        if(!event.KeyInput.PressedDown)
-          sendKeyEvent(disp, mapKeyCode(event.KeyInput.Key));
+        xdisp.sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown);
         printf("keycode: %d\n", event.KeyInput.Key);
       }
       return false;
