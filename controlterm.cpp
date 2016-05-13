@@ -69,6 +69,15 @@ int X11Display::sendKeyEvent(int keycode, bool keyDown, int mod = 0)
   return 0;
 }
 
+bool IsModKey(int keycode) {
+  switch(keycode){
+    case irr::KEY_LSHIFT :
+      return true;
+    default :
+      return false;
+  }
+}
+
 int mapKeyCode(int irrcode){
   switch(irrcode){
     //FIXME: only to get rid of arrow spam

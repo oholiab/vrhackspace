@@ -34,8 +34,16 @@ class VREventReceiver : public IEventReceiver {
   public:
     virtual bool OnEvent(const SEvent& event){
       if(event.EventType == irr::EET_KEY_INPUT_EVENT){
-        KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
-        xdisp.sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown);
+        if(IsModKey(event.KeyInput.Key)){
+          if(event.KeyInput.PressedDown){
+            CurrentMod |= mapKeyCode(event.KeyInput.Key);
+          } else {
+            CurrentMod &= ~mapKeyCode(event.KeyInput.Key);
+          }
+        } else {
+          KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+          xdisp.sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown, CurrentMod);
+        }
         printf("keycode: %d\n", event.KeyInput.Key);
       }
       return false;
@@ -45,6 +53,7 @@ class VREventReceiver : public IEventReceiver {
     }
   private:
     bool KeyIsDown[KEY_KEY_CODES_COUNT];
+    int CurrentMod;
 };
 
 int main() {
