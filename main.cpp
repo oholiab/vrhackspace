@@ -105,7 +105,7 @@ int main() {
   video::ITexture * texture;
   while(device->run()) {
     device->getVideoDriver()->removeTexture(texture);
-    texture = driver->getTexture("/tmp/roomtest/shot.png");
+    texture = driver->getTexture("/tmp/vrhs/shot.png");
     cube->setMaterialTexture(0, texture);
     //if(device->isWindowActive()){
       // TODO: maybe this should be billboard based?
