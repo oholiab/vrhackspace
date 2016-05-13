@@ -50,6 +50,10 @@ int mapKeyCode(int irrcode){
       return XK_Tab;
     case irr::KEY_RETURN :
       return XK_Return;
+    case irr::KEY_MINUS :
+      return XK_minus;
+    case irr::KEY_OEM_7 :
+      return XK_apostrophe;
     default:
       return irrcode;
   }
