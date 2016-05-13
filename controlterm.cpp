@@ -71,7 +71,8 @@ int X11Display::sendKeyEvent(int keycode, bool keyDown, int mod = 0)
 
 bool IsModKey(int keycode) {
   switch(keycode){
-    case irr::KEY_LSHIFT :
+    //shift, control and menu (both left and right) are consecutive
+    case irr::KEY_LSHIFT ... irr::KEY_RMENU :
       return true;
     default :
       return false;
@@ -87,14 +88,31 @@ int mapKeyCode(int irrcode){
       return XK_BackSpace;
     case irr::KEY_TAB :
       return XK_Tab;
+    //FIXME: Should escape be a modifier too?
+    case irr::KEY_ESCAPE :
+      return XK_Escape;
     case irr::KEY_RETURN :
       return XK_Return;
     case irr::KEY_MINUS :
       return XK_minus;
+    case irr::KEY_OEM_1 :
+      return XK_semicolon;
+    case irr::KEY_OEM_2 :
+      return XK_slash;
     case irr::KEY_OEM_7 :
       return XK_apostrophe;
+    case irr::KEY_PERIOD :
+      return XK_period;
+    case irr::KEY_OEM_5 :
+      return XK_backslash;
     case irr::KEY_LSHIFT :
       return XK_Shift_L;
+    case irr::KEY_RSHIFT :
+      return XK_Shift_R;
+    case irr::KEY_LCONTROL :
+      return XK_Control_L;
+    case irr::KEY_RCONTROL :
+      return XK_Control_R;
     default:
       return irrcode;
   }

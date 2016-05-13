@@ -23,7 +23,7 @@ image: Dockerfile screenme.sh
 	docker build -t roomtest .
 
 runc:
-	docker run -v /tmp/roomtest:/roomtest -v /tmp/.X11-unix:/tmp/.X11-unix --rm --name roomtest roomtest
+	docker run -v /tmp/roomtest:/roomtest -v /tmp/.X11-unix:/tmp/.X11-unix -v $(shell pwd):/workspace --rm --name roomtest roomtest
 
 run: main
 	./main | grep -v "Loaded texture"
