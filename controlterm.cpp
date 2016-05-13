@@ -79,18 +79,18 @@ int sendKeyEvent(const char* disp, int keycode)
   Window winFocus;
   int revert;
 
-  X11Display X11Display(disp);
+  X11Display xdisp(disp);
 
-  Display *display = XOpenDisplay(disp);
-  if(NULL == display)
-    return -1;
-  Window winRoot = XDefaultRootWindow(display);
+  //Display *display = XOpenDisplay(disp);
+  //if(NULL == display)
+  //  return -1;
+  Window winRoot = XDefaultRootWindow(xdisp.display);
   //XSetInputFocus(display, 1, revert, CurrentTime);
-  XGetInputFocus(display, &winFocus, &revert);
-  XKeyEvent event = createKeyEvent(display, winFocus, winRoot, true, keycode, 0);
+  XGetInputFocus(xdisp.display, &winFocus, &revert);
+  XKeyEvent event = createKeyEvent(xdisp.display, winFocus, winRoot, true, keycode, 0);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
-  event = createKeyEvent(display, winFocus, winRoot, false, keycode, 0);
+  event = createKeyEvent(xdisp.display, winFocus, winRoot, false, keycode, 0);
   XSendEvent(event.display, event.window, True, KeyPressMask, (XEvent*)&event);
-  XCloseDisplay(display);
+  //XCloseDisplay(display);
   return 0;
 }
