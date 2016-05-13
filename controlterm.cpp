@@ -103,6 +103,8 @@ int mapKeyCode(int irrcode){
       return XK_apostrophe;
     case irr::KEY_PERIOD :
       return XK_period;
+    case irr::KEY_COMMA :
+      return XK_comma;
     case irr::KEY_OEM_5 :
       return XK_backslash;
     case irr::KEY_LSHIFT :
