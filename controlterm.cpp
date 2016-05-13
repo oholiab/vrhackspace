@@ -95,6 +95,8 @@ int mapKeyCode(int irrcode){
       return XK_Return;
     case irr::KEY_MINUS :
       return XK_minus;
+    case irr::KEY_PLUS :
+      return XK_equal;
     case irr::KEY_OEM_1 :
       return XK_semicolon;
     case irr::KEY_OEM_2 :
