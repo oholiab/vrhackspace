@@ -82,6 +82,8 @@ and that's half the fun! Go nuts!
   time which is an enormous pain when navigating in vim. Equally, I've disabled
   cursor keys which is awful for bash. This is the price of MVP ;) It's next on
   the list
+- There are almost certainly some keycodes missing - I've been adding these as I
+  find them
 - Screen updating is slow. This could very well be a limitation of irrlicht,
   hence why this is both proof-of-concept and "Mark I"... The engine may not be
   suitable. That said, if you can work with transatlantic latency, you should be
