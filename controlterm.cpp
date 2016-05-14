@@ -101,6 +101,10 @@ int mapKeyCode(int irrcode){
       return XK_semicolon;
     case irr::KEY_OEM_2 :
       return XK_slash;
+    case irr::KEY_OEM_4 :
+      return XK_bracketleft;
+    case irr::KEY_OEM_6 :
+      return XK_bracketright;
     case irr::KEY_OEM_7 :
       return XK_apostrophe;
     case irr::KEY_PERIOD :
