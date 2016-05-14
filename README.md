@@ -11,7 +11,8 @@ Confused? Here's a [video](https://youtu.be/HYER93GXVmQ)
 ## Why
 The VR Hackspace is the product of both idle musings about how you don't need
 space for a lot of monitors if your computer terminal is rendered in VR, and
-also prompted by the n-o-d-e.net post about a VR hackspace.
+also prompted by the [n-o-d-e.net](n-o-d-e.net) post about a [VR
+hackspace](http://n-o-d-e.net/post/143001800026/could-we-make-a-virtual-reality-hackspace).
 
 After reading it, I took it upon myself to produce my interpretation using
 technologies I was familiar with (containerisation, weird X11 desktop hacks) and
