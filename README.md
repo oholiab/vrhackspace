@@ -1,8 +1,12 @@
+![hackspace](https://grimmwa.re/files/hackspace.png)
+
 #Grimmware VR Hackspace Mk I
 ## What
 The VR Hackspace is a proof-of-concept attempt to render computer terminals and
 other collaborative hacking tools in a VR environment. Currently it is only
 single user.
+
+Confused? Here's a [video](https://youtu.be/HYER93GXVmQ)
 
 ## Why
 The VR Hackspace is the product of both idle musings about how you don't need
