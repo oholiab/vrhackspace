@@ -49,9 +49,15 @@ class X11Display {
 };
 
 // TODO: fail out if display doesn't initialize
-X11Display::X11Display(const char* dispName) :
-  display(XOpenDisplay(dispName)),
-  winRoot(XDefaultRootWindow(display)) {}
+X11Display::X11Display(const char* dispName) 
+{
+  display = XOpenDisplay(dispName);
+  if(NULL == display) {
+    printf("invalid X11 display: %s\n", dispName);
+    throw;
+  }
+  winRoot = XDefaultRootWindow(display);
+}
 
 X11Display::~X11Display() { XCloseDisplay(display); }
 
