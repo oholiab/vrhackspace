@@ -37,7 +37,6 @@ class VREventReceiver : public IEventReceiver {
           KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
           xdisp.sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown, CurrentMod);
         }
-        printf("keycode: %d\n", event.KeyInput.Key);
       }
       return false;
     }
@@ -46,6 +45,7 @@ class VREventReceiver : public IEventReceiver {
     }
   private:
     bool KeyIsDown[KEY_KEY_CODES_COUNT];
+    // FIXME: can initialise to nonzero
     int CurrentMod;
 };
 
@@ -60,6 +60,17 @@ int main() {
   video::IVideoDriver* driver = device->getVideoDriver();
   scene::ISceneManager* smgr = device->getSceneManager();
   gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
+
+  video::SMaterial selectMaterial;
+  selectMaterial.Wireframe = true;
+
+  scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
+  bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
+  bill->setMaterialTexture(0, driver->getTexture("media/particle.jpg"));
+  bill->setMaterialFlag(video::EMF_LIGHTING, false);
+  bill->setMaterialFlag(video::EMF_ZBUFFER, false);
+  bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
+  bill->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
   scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
   cube->setMaterialFlag(video::EMF_LIGHTING, false);
@@ -104,40 +115,49 @@ int main() {
     levelAnim->drop();  // And likewise, drop the animator when we're done referring to it.
   }
 
-  // Make the pointy pointer thingy
-  core::line3d<f32> ray;
-  ray.start = camera->getPosition();
-  ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 100.0f;
-
-  core::vector3df intersection; 
-  core::triangle3df hitTriangle;
 
   device->getCursorControl()->setVisible(false);
   //camera->setTarget(cube->getAbsolutePosition());
   int lastFPS = -1;
   video::ITexture * texture;
+  int mark = 0;
   while(device->run()) {
     device->getVideoDriver()->removeTexture(texture);
     texture = driver->getTexture("/tmp/vrhs/shot.png");
     cube->setMaterialTexture(0, texture);
-    //if(device->isWindowActive()){
-      // TODO: maybe this should be billboard based?
-      //int fps = driver->getFPS();
-      //core::stringw status;
-      //if(fps != lastFPS){
-      //  status = L"grimmwa.re VR hackspace mkI [";
-      //  status += driver->getName();
-      //  status += "] FPS::";
-      //  status += fps;
-      //  lastFPS = fps;
-      //}
-      //font->draw(status, core::rect<s32>(10,10,200,22), video::SColor(255,255,255,255));
+    // Make the pointy pointer thingy
+    core::line3d<f32> ray;
+    ray.start = camera->getPosition();
+    ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
 
-      driver->beginScene(true, true, video::SColor(255,100,101,140));
-      smgr->drawAll();
-      guienv->drawAll();
-      driver->endScene();
-    //}
+    scene::ISceneCollisionManager* collMan = smgr->getSceneCollisionManager();
+
+    core::vector3df intersection; 
+    core::triangle3df hitTriangle;
+
+    driver->beginScene(true, true, video::SColor(255,100,101,140));
+    scene::ISceneNode * selectedSceneNode =
+      collMan->getSceneNodeAndCollisionPointFromRay(
+          ray,
+          intersection,
+          hitTriangle,
+          IDFlag_IsInteractable,
+          0);
+
+    if(selectedSceneNode)
+    {
+      mark++;
+      // I have nfi why I have to do this if... but the selection in collMan doesn't work!
+      if(selectedSceneNode->getID() == IDFlag_IsInteractable); // do a thing
+      bill->setPosition(intersection);
+      driver->setTransform(video::ETS_WORLD, core::matrix4());
+      driver->setMaterial(selectMaterial);
+      driver->draw3DTriangle(hitTriangle, video::SColor(0, 255, 0, 0));
+    }
+
+    smgr->drawAll();
+    guienv->drawAll();
+    driver->endScene();
   }
   device->drop();
   return 0;

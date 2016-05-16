@@ -65,7 +65,6 @@ int X11Display::sendKeyEvent(int keycode, bool keyDown, int mod = 0)
 {
   if(-1==keycode)
     return 0;
-  printf("sendKeyEvent keycode: %d\n", keycode);
   Window winFocus;
   int revert;
 
