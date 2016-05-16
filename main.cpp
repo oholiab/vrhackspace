@@ -14,18 +14,11 @@ using namespace irr;
 //using namespace gui;
 //
 enum {
-  // I use this ISceneNode ID to indicate a scene node that is
-  // not pickable by getSceneNodeAndCollisionPointFromRay()
   ID_IsNotPickable = 0,
 
-  // I use this flag in ISceneNode IDs to indicate that the
-  // scene node can be picked by ray selection.
-  IDFlag_IsPickable = 1 << 0,
+  IDFlag_IsSolid = 1 << 0,
 
-  // I use this flag in ISceneNode IDs to indicate that the
-  // scene node can be highlighted.  In this example, the
-  // homonids can be highlighted, but the level mesh can't.
-  IDFlag_IsHighlightable = 1 << 1
+  IDFlag_IsInteractable = 1 << 1
 };
 
 X11Display xdisp(disp);
@@ -68,21 +61,32 @@ int main() {
   scene::ISceneManager* smgr = device->getSceneManager();
   gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-  // Create the level and the collision selector
-  device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
   scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
   cube->setMaterialFlag(video::EMF_LIGHTING, false);
+  if(cube){
+    scene::ITriangleSelector* selector = smgr->createTriangleSelectorFromBoundingBox( cube );
+    cube->setTriangleSelector( selector );
+    selector->drop();
+  }
+  scene::ITriangleSelector* cubeSelector = cube->getTriangleSelector();
+
+  // Create the level and the collision levelSelector
+  device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
   scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");
   scene::IMeshSceneNode* levelNode = 0;
-  scene::ITriangleSelector* selector = 0;
+  scene::ITriangleSelector* levelSelector = 0;
+  scene::IMetaTriangleSelector* cameraCollisionSelector = 
+    smgr->createMetaTriangleSelector();
   if (levelMesh) {
-    levelNode = smgr->addOctreeSceneNode(levelMesh->getMesh(0), 0, IDFlag_IsPickable);
+    levelNode = smgr->addOctreeSceneNode(levelMesh->getMesh(0), 0, IDFlag_IsSolid);
 //      node = smgr->addMeshSceneNode(mesh->getMesh(0));
     if(levelNode){
       levelNode->setPosition(core::vector3df(-1350,-130,-1400));
-      selector = smgr->createOctreeTriangleSelector(
+      levelSelector = smgr->createOctreeTriangleSelector(
                  levelNode->getMesh(), levelNode, 128);
-      levelNode->setTriangleSelector(selector);
+      cameraCollisionSelector->addTriangleSelector(levelSelector);
+      cameraCollisionSelector->addTriangleSelector(cubeSelector);
+      levelNode->setTriangleSelector(levelSelector);
     }
   }
 
@@ -91,14 +95,23 @@ int main() {
   camera->setPosition(core::vector3df(50,50,-60));
 
   //Add collision to the camera
-  if (selector) {
-    scene::ISceneNodeAnimator* anim = smgr->createCollisionResponseAnimator(
-      selector, camera, core::vector3df(30,50,30),
+  if (levelSelector) {
+    scene::ISceneNodeAnimator* levelAnim = smgr->createCollisionResponseAnimator(
+      cameraCollisionSelector, camera, core::vector3df(30,50,30),
       core::vector3df(0,-10,0), core::vector3df(0,30,0));
-    selector->drop(); // As soon as we're done with the selector, drop it.
-    camera->addAnimator(anim);
-    anim->drop();  // And likewise, drop the animator when we're done referring to it.
+    levelSelector->drop(); // As soon as we're done with the levelSelector, drop it.
+    camera->addAnimator(levelAnim);
+    levelAnim->drop();  // And likewise, drop the animator when we're done referring to it.
   }
+
+  // Make the pointy pointer thingy
+  core::line3d<f32> ray;
+  ray.start = camera->getPosition();
+  ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 100.0f;
+
+  core::vector3df intersection; 
+  core::triangle3df hitTriangle;
+
   device->getCursorControl()->setVisible(false);
   //camera->setTarget(cube->getAbsolutePosition());
   int lastFPS = -1;
