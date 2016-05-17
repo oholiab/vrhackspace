@@ -63,6 +63,7 @@ int main() {
 
   video::SMaterial selectMaterial;
   selectMaterial.Wireframe = true;
+  selectMaterial.Lighting = false;
 
   scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
   bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
@@ -73,7 +74,7 @@ int main() {
   bill->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
   scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
-  cube->setMaterialFlag(video::EMF_LIGHTING, false);
+  cube->setMaterialFlag(video::EMF_LIGHTING, true);
   if(cube){
     scene::ITriangleSelector* selector = smgr->createTriangleSelectorFromBoundingBox( cube );
     cube->setTriangleSelector( selector );
@@ -120,7 +121,6 @@ int main() {
   //camera->setTarget(cube->getAbsolutePosition());
   int lastFPS = -1;
   video::ITexture * texture;
-  int mark = 0;
   while(device->run()) {
     device->getVideoDriver()->removeTexture(texture);
     texture = driver->getTexture("/tmp/vrhs/shot.png");
@@ -146,9 +146,6 @@ int main() {
 
     if(selectedSceneNode)
     {
-      mark++;
-      // I have nfi why I have to do this if... but the selection in collMan doesn't work!
-      if(selectedSceneNode->getID() == IDFlag_IsInteractable); // do a thing
       bill->setPosition(intersection);
       driver->setTransform(video::ETS_WORLD, core::matrix4());
       driver->setMaterial(selectMaterial);
