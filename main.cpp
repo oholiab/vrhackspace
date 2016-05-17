@@ -75,29 +75,41 @@ int main() {
   bill->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
   // Set up terminal
-  scene::IMeshSceneNode *cube = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
-  cube->setMaterialFlag(video::EMF_LIGHTING, true);
-  if(cube){
-    scene::ITriangleSelector* selector = smgr->createTriangleSelectorFromBoundingBox( cube );
-    cube->setTriangleSelector( selector );
-    selector->drop();
-  }
-  scene::ITriangleSelector* cubeSelector = cube->getTriangleSelector();
+  scene::IMeshSceneNode *terminal = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
+  terminal->setMaterialFlag(video::EMF_LIGHTING, true);
+  terminal->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
+  terminal->setTriangleSelector( smgr->createTriangleSelector( terminal->getMesh(), terminal ));
 
   // Add lighting
-  scene::ISceneNode* light = smgr->addLightSceneNode(0, core::vector3df(10,20,20),
+  scene::ISceneNode* light = smgr->addLightSceneNode(0, core::vector3df(10,10,10),
       video::SColorf(1.0f, 0.6f, 0.7f, 1.0f), 800.0f);
+  light->addAnimator(smgr->createFlyCircleAnimator(core::vector3df(0,150,0),250.0f));
 
-  scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(30, 30, 30));
+  light = smgr->addBillboardSceneNode(light, core::dimension2d<f32>(50, 50));
+  light->setMaterialFlag(video::EMF_LIGHTING, false);
+  light->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+  light->setMaterialTexture(0, driver->getTexture("media/particle.jpg"));
+
+  // Metal room
+  scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(30, 30, 30));
   smgr->getMeshManipulator()->flipSurfaces(room->getMesh());
-  room->setMaterialFlag(video::EMF_LIGHTING, false);
+  //smgr->getMeshManipulator()->recalculateNormals(room->getMeshBuffer()); maybe this?
+  room->setMaterialFlag(video::EMF_LIGHTING, true);
+  room->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
+  room->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
   room->setMaterialTexture(0, driver->getTexture("media/texture.jpg"));
   room->setTriangleSelector(smgr->createTriangleSelector( room->getMesh(), room ));
 
-  bool yesLevel = true;
+
+  scene::IMeshSceneNode *room2 = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(3, 3, 3));
+  room2->setMaterialFlag(video::EMF_LIGHTING, true);
+  room2->setMaterialTexture(0, driver->getTexture("media/texture.jpg"));
+  room2->setTriangleSelector(smgr->createTriangleSelector( room2->getMesh(), room2 ));
+
+  bool yesLevel = false;
   int collideablesNumber = 3;
   scene::ITriangleSelector* collideables[collideablesNumber];
-  collideables[0] = cubeSelector;
+  collideables[0] = terminal->getTriangleSelector();
   collideables[1] = room->getTriangleSelector();
 
   scene::IMetaTriangleSelector* cameraCollisionSelector = 
@@ -141,14 +153,14 @@ int main() {
 
 
   device->getCursorControl()->setVisible(false);
-  //camera->setTarget(cube->getAbsolutePosition());
+  //camera->setTarget(terminal->getAbsolutePosition());
   int lastFPS = -1;
   video::ITexture * texture;
   scene::ISceneNode* lastSelectedSceneNode = NULL;
   while(device->run()) {
     device->getVideoDriver()->removeTexture(texture);
     texture = driver->getTexture("/tmp/vrhs/shot.png");
-    cube->setMaterialTexture(0, texture);
+    terminal->setMaterialTexture(0, texture);
     // Make the pointy pointer thingy
     core::line3d<f32> ray;
     ray.start = camera->getPosition();
