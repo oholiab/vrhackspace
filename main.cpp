@@ -60,8 +60,12 @@ void setOutlineVisible(scene::ISceneNode *node, int visible){
   }
 }
 
-int main() {
+int main(int argc, char** argv) {
   // Uses driverChoiceConsole() from driverChoice.h
+  bool yesQuake = false;
+  if(argc > 1){
+    if(strcmp(argv[1], "--quake") == 0) yesQuake = true;
+  }
 
   VREventReceiver receiver;
   IrrlichtDevice *device = createDevice(driverChoiceConsole(), core::dimension2d<u32>(512, 384), 16, false, false, false, &receiver);
@@ -94,13 +98,12 @@ int main() {
   light->setMaterialTexture(0, driver->getTexture("media/particle.bmp"));
   light->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
-  bool yesLevel = false;
   core::list<scene::ITriangleSelector*> collideables;
   collideables.push_back(terminal->getTriangleSelector());
 
   scene::IMetaTriangleSelector* cameraCollisionSelector = 
     smgr->createMetaTriangleSelector();
-  if(yesLevel){
+  if(yesQuake){
     // Create the level and the collision levelSelector
     device->getFileSystem()->addFileArchive("models/map-20kdm2.pk3");
     scene::IAnimatedMesh* levelMesh = smgr->getMesh("20kdm2.bsp");

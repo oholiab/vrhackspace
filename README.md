@@ -54,9 +54,16 @@ In one terminal, to run the container:
 In another, to build and run the application:
     make run
 
+Or if you'd prefer to be in an undynamically lit quake level to a scary metal
+cube...
+    make run-quake
+
 The default flags for running the container include the /workspace volume mount
 which will enable you to work on the code from within the hackspace... Fun fact:
 that's how I'm writing this right now! (It's also why it now supports commas).
+
+To type into the terminal, move up to it until it's hilighted (white selection
+around it) and fill your boots! To stop typing, just face away.
 
 ####Contributing
 I prefer POC code over suggestions, so if you've got an idea but you're not sure

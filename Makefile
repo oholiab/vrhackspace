@@ -38,3 +38,6 @@ runc: image
 
 run: main
 	./main | grep -v "Loaded texture"
+
+run-quake: main
+	./main --quake | grep -v "Loaded texture"
