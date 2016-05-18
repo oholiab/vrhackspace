@@ -1,5 +1,5 @@
 levelmodel=models/map-20kdm2.pk3
-particle=media/particle.bmp
+media=media/particle.bmp media/texture.jpg
 TARGETS=main termtest.out
 CONTAINER?=vrhs
 
@@ -15,11 +15,16 @@ $(levelmodel):
 	mkdir -p models
 	cd models && wget https://github.com/kexplo/irrlicht_ogl-es/raw/master/media/map-20kdm2.pk3
 
-$(particle):
+media:
 	mkdir -p media
+
+media/particle.bmp: | media
 	cd media && wget https://rc.fas.harvard.edu/wp-content/uploads/particle.jpg -O particle.bmp
 
-main: main.o $(levelmodel) $(particle)
+media/texture.jpg: | media
+	cd media && wget https://grimmwa.re/files/texture.jpg
+
+main: main.o $(levelmodel) $(media)
 	g++ main.o -o main -lIrrlicht -lX11
 
 clean: main
