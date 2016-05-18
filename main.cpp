@@ -2,6 +2,9 @@
 #include <irrlicht/driverChoice.h>
 #include "controlterm.cpp"
 
+#define VISIBLE 1
+#define INVISIBLE 0
+
 const char* disp = ":1";
 
 //#pragma comment(lib, "Irrlicht.lib")
@@ -15,10 +18,9 @@ using namespace irr;
 //
 enum {
   ID_IsNotPickable = 0,
-
   IDFlag_IsSolid = 1 << 0,
-
-  IDFlag_IsInteractable = 1 << 1
+  IDFlag_IsInteractable = 1 << 1,
+  IDFlag_IsOutline = 1 << 2
 };
 
 X11Display xdisp(disp);
@@ -75,10 +77,15 @@ int main() {
   bill->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
   // Set up terminal
-  scene::IMeshSceneNode *terminal = smgr->addCubeSceneNode(15.0f, 0, -1, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
+  scene::IMeshSceneNode *terminal = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsInteractable, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
   terminal->setMaterialFlag(video::EMF_LIGHTING, true);
   terminal->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
   terminal->setTriangleSelector( smgr->createTriangleSelector( terminal->getMesh(), terminal ));
+  scene::SMesh* outline = smgr->getMeshManipulator()->createMeshCopy(terminal->getMesh());
+  smgr->getMeshManipulator()->flipSurfaces(outline);
+  outline->setMaterialFlag(video::EMF_LIGHTING, false);
+  smgr->getMeshManipulator()->recalculateNormals(outline);
+  scene::IMeshSceneNode *outlineNode = smgr->addMeshSceneNode(outline, terminal, ID_IsNotPickable | IDFlag_IsOutline, core::vector3df(0,0,0), core::vector3df(0,0,0), core::vector3df(1.05,1.05,1.05));
 
   // Add lighting
   scene::ISceneNode* light = smgr->addLightSceneNode(0, core::vector3df(10,10,10),
@@ -94,10 +101,9 @@ int main() {
   scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(30, 30, 30));
   smgr->getMeshManipulator()->flipSurfaces(room->getMesh());
   smgr->getMeshManipulator()->recalculateNormals(room->getMesh());
-  //smgr->getMeshManipulator()->recalculateNormals(room->getMeshBuffer()); maybe this?
   room->setMaterialFlag(video::EMF_LIGHTING, true);
   room->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-  room->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
+  //room->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
   room->setMaterialTexture(0, driver->getTexture("media/texture.jpg"));
   room->setTriangleSelector(smgr->createTriangleSelector( room->getMesh(), room ));
 
@@ -181,13 +187,37 @@ int main() {
           IDFlag_IsInteractable,
           0);
 
-    if(lastSelectedSceneNode) lastSelectedSceneNode->setMaterialFlag(video::EMF_LIGHTING, true);
+    if(lastSelectedSceneNode){
+      lastSelectedSceneNode->setMaterialFlag(video::EMF_LIGHTING, true);
+      irr::core::list<irr::scene::ISceneNode*> children = lastSelectedSceneNode->getChildren();
+      irr::core::list<irr::scene::ISceneNode*>::ConstIterator start = children.begin();
+      const irr::core::list<irr::scene::ISceneNode*>::ConstIterator& end = children.end();
+
+      for (; start != end; ++start)
+      {
+         irr::scene::ISceneNode* const node = (*start);
+
+         if(node->getID() & IDFlag_IsOutline) node->setVisible(INVISIBLE);
+      }
+    }
     if(selectedSceneNode)
     {
       bill->setPosition(intersection);
       driver->setTransform(video::ETS_WORLD, core::matrix4());
       driver->setMaterial(selectMaterial);
       driver->draw3DTriangle(hitTriangle, video::SColor(0, 255, 0, 0));
+
+      irr::core::list<irr::scene::ISceneNode*> children = selectedSceneNode->getChildren();
+      irr::core::list<irr::scene::ISceneNode*>::ConstIterator start = children.begin();
+      const irr::core::list<irr::scene::ISceneNode*>::ConstIterator& end = children.end();
+
+      for (; start != end; ++start)
+      {
+         irr::scene::ISceneNode* const node = (*start);
+
+         if(node->getID() & IDFlag_IsOutline) node->setVisible(VISIBLE);
+      }
+
       selectedSceneNode->setMaterialFlag(video::EMF_LIGHTING, false);
       lastSelectedSceneNode = selectedSceneNode;
     } 
