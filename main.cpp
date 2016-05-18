@@ -68,7 +68,7 @@ int main() {
 
   scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
   bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
-  bill->setMaterialTexture(0, driver->getTexture("media/particle.jpg"));
+  bill->setMaterialTexture(0, driver->getTexture("media/particle.bmp"));
   bill->setMaterialFlag(video::EMF_LIGHTING, false);
   bill->setMaterialFlag(video::EMF_ZBUFFER, false);
   bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
@@ -88,7 +88,7 @@ int main() {
   light = smgr->addBillboardSceneNode(light, core::dimension2d<f32>(50, 50));
   light->setMaterialFlag(video::EMF_LIGHTING, false);
   light->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
-  light->setMaterialTexture(0, driver->getTexture("media/particle.jpg"));
+  light->setMaterialTexture(0, driver->getTexture("media/particle.bmp"));
 
   // Metal room
   scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(30, 30, 30));

@@ -1,5 +1,5 @@
 levelmodel=models/map-20kdm2.pk3
-particle=media/particle.jpg
+particle=media/particle.bmp
 TARGETS=main termtest.out
 CONTAINER?=vrhs
 
@@ -17,7 +17,7 @@ $(levelmodel):
 
 $(particle):
 	mkdir -p media
-	cd media && wget https://rc.fas.harvard.edu/wp-content/uploads/particle.jpg
+	cd media && wget https://rc.fas.harvard.edu/wp-content/uploads/particle.jpg -O particle.bmp
 
 main: main.o $(levelmodel) $(particle)
 	g++ main.o -o main -lIrrlicht -lX11
