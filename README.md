@@ -33,6 +33,8 @@ keypresses are translated and forwarded to the X11 socket.
 
 So basically it's an enormous shonky hack.
 
+![R2D2 where are you? Showing off the outline to select a term.](https://grimmwa.re/files/outlinehackspace.png)
+
 ### Running
 ####Dependencies
 As far as I can figure, you need two^Wthree main dependencies:
