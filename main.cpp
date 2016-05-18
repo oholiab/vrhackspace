@@ -93,6 +93,7 @@ int main() {
   // Metal room
   scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(30, 30, 30));
   smgr->getMeshManipulator()->flipSurfaces(room->getMesh());
+  smgr->getMeshManipulator()->recalculateNormals(room->getMesh());
   //smgr->getMeshManipulator()->recalculateNormals(room->getMeshBuffer()); maybe this?
   room->setMaterialFlag(video::EMF_LIGHTING, true);
   room->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
