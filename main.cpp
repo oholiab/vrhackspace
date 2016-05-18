@@ -7,15 +7,8 @@
 
 const char* disp = ":1";
 
-//#pragma comment(lib, "Irrlicht.lib")
-
 using namespace irr;
-//using namespace core;
-//using namespace scene;
-//using namespace video;
-//using namespace io;
-//using namespace gui;
-//
+
 enum {
   ID_IsNotPickable = 0,
   IDFlag_IsSolid = 1 << 0,
@@ -52,6 +45,20 @@ class VREventReceiver : public IEventReceiver {
     int CurrentMod;
 };
 
+void setOutlineVisible(scene::ISceneNode *node, int visible){
+  // Will set child scene node's that are outlines as invisible if they exist
+  irr::core::list<irr::scene::ISceneNode*> children = node->getChildren();
+  irr::core::list<irr::scene::ISceneNode*>::ConstIterator start = children.begin();
+  const irr::core::list<irr::scene::ISceneNode*>::ConstIterator& end = children.end();
+
+  for (; start != end; ++start)
+  {
+     irr::scene::ISceneNode* const node = (*start);
+
+     if(node->getID() & IDFlag_IsOutline) node->setVisible(visible);
+  }
+}
+
 int main() {
   // Uses driverChoiceConsole() from driverChoice.h
 
@@ -64,21 +71,9 @@ int main() {
   scene::ISceneManager* smgr = device->getSceneManager();
   gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-  video::SMaterial selectMaterial;
-  selectMaterial.Wireframe = true;
-  selectMaterial.Lighting = false;
-
-  scene::IBillboardSceneNode * bill = smgr->addBillboardSceneNode();
-  bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR );
-  bill->setMaterialTexture(0, driver->getTexture("media/particle.bmp"));
-  bill->setMaterialFlag(video::EMF_LIGHTING, false);
-  bill->setMaterialFlag(video::EMF_ZBUFFER, false);
-  bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
-  bill->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
-
   // Set up terminal
   scene::IMeshSceneNode *terminal = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsInteractable, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
-  terminal->setMaterialFlag(video::EMF_LIGHTING, true);
+  terminal->setMaterialFlag(video::EMF_LIGHTING, false); // because monitors are light sources
   terminal->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
   terminal->setTriangleSelector( smgr->createTriangleSelector( terminal->getMesh(), terminal ));
   scene::SMesh* outline = smgr->getMeshManipulator()->createMeshCopy(terminal->getMesh());
@@ -96,6 +91,7 @@ int main() {
   light->setMaterialFlag(video::EMF_LIGHTING, false);
   light->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
   light->setMaterialTexture(0, driver->getTexture("media/particle.bmp"));
+  light->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
   // Metal room
   scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(30, 30, 30));
@@ -103,15 +99,8 @@ int main() {
   smgr->getMeshManipulator()->recalculateNormals(room->getMesh());
   room->setMaterialFlag(video::EMF_LIGHTING, true);
   room->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-  //room->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
   room->setMaterialTexture(0, driver->getTexture("media/texture.jpg"));
   room->setTriangleSelector(smgr->createTriangleSelector( room->getMesh(), room ));
-
-
-  scene::IMeshSceneNode *room2 = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(3, 3, 3));
-  room2->setMaterialFlag(video::EMF_LIGHTING, true);
-  room2->setMaterialTexture(0, driver->getTexture("media/texture.jpg"));
-  room2->setTriangleSelector(smgr->createTriangleSelector( room2->getMesh(), room2 ));
 
   bool yesLevel = false;
   int collideablesNumber = 3;
@@ -158,7 +147,6 @@ int main() {
   camera->addAnimator(levelAnim);
   levelAnim->drop();  // And likewise, drop the animator when we're done referring to it.
 
-
   device->getCursorControl()->setVisible(false);
   //camera->setTarget(terminal->getAbsolutePosition());
   int lastFPS = -1;
@@ -187,38 +175,10 @@ int main() {
           IDFlag_IsInteractable,
           0);
 
-    if(lastSelectedSceneNode){
-      lastSelectedSceneNode->setMaterialFlag(video::EMF_LIGHTING, true);
-      irr::core::list<irr::scene::ISceneNode*> children = lastSelectedSceneNode->getChildren();
-      irr::core::list<irr::scene::ISceneNode*>::ConstIterator start = children.begin();
-      const irr::core::list<irr::scene::ISceneNode*>::ConstIterator& end = children.end();
-
-      for (; start != end; ++start)
-      {
-         irr::scene::ISceneNode* const node = (*start);
-
-         if(node->getID() & IDFlag_IsOutline) node->setVisible(INVISIBLE);
-      }
-    }
+    if(lastSelectedSceneNode) setOutlineVisible(lastSelectedSceneNode, INVISIBLE);
     if(selectedSceneNode)
     {
-      bill->setPosition(intersection);
-      driver->setTransform(video::ETS_WORLD, core::matrix4());
-      driver->setMaterial(selectMaterial);
-      driver->draw3DTriangle(hitTriangle, video::SColor(0, 255, 0, 0));
-
-      irr::core::list<irr::scene::ISceneNode*> children = selectedSceneNode->getChildren();
-      irr::core::list<irr::scene::ISceneNode*>::ConstIterator start = children.begin();
-      const irr::core::list<irr::scene::ISceneNode*>::ConstIterator& end = children.end();
-
-      for (; start != end; ++start)
-      {
-         irr::scene::ISceneNode* const node = (*start);
-
-         if(node->getID() & IDFlag_IsOutline) node->setVisible(VISIBLE);
-      }
-
-      selectedSceneNode->setMaterialFlag(video::EMF_LIGHTING, false);
+      setOutlineVisible(selectedSceneNode, VISIBLE);
       lastSelectedSceneNode = selectedSceneNode;
     } 
 
@@ -228,5 +188,4 @@ int main() {
   }
   device->drop();
   return 0;
-
 }
