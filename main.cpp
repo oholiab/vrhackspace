@@ -17,11 +17,12 @@ enum {
 };
 
 X11Display xdisp(disp);
+scene::ISceneNode* selectedSceneNode = NULL;
 
 class VREventReceiver : public IEventReceiver {
   public:
     virtual bool OnEvent(const SEvent& event){
-      if(event.EventType == irr::EET_KEY_INPUT_EVENT){
+      if(selectedSceneNode && event.EventType == irr::EET_KEY_INPUT_EVENT){
         if(IsModKey(event.KeyInput.Key)){
           if(event.KeyInput.PressedDown){
             //FIXME: shit sometimes gets weird here
@@ -159,7 +160,7 @@ int main() {
     // Make the pointy pointer thingy
     core::line3d<f32> ray;
     ray.start = camera->getPosition();
-    ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 1000.0f;
+    ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * 100.0f;
 
     scene::ISceneCollisionManager* collMan = smgr->getSceneCollisionManager();
 
@@ -167,7 +168,7 @@ int main() {
     core::triangle3df hitTriangle;
 
     driver->beginScene(true, true, video::SColor(255,100,101,140));
-    scene::ISceneNode * selectedSceneNode =
+    selectedSceneNode =
       collMan->getSceneNodeAndCollisionPointFromRay(
           ray,
           intersection,
