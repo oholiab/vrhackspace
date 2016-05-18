@@ -94,20 +94,9 @@ int main() {
   light->setMaterialTexture(0, driver->getTexture("media/particle.bmp"));
   light->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
-  // Metal room
-  scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(30, 30, 30));
-  smgr->getMeshManipulator()->flipSurfaces(room->getMesh());
-  smgr->getMeshManipulator()->recalculateNormals(room->getMesh());
-  room->setMaterialFlag(video::EMF_LIGHTING, true);
-  room->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-  room->setMaterialTexture(0, driver->getTexture("media/texture.jpg"));
-  room->setTriangleSelector(smgr->createTriangleSelector( room->getMesh(), room ));
-
   bool yesLevel = false;
-  int collideablesNumber = 3;
-  scene::ITriangleSelector* collideables[collideablesNumber];
-  collideables[0] = terminal->getTriangleSelector();
-  collideables[1] = room->getTriangleSelector();
+  core::list<scene::ITriangleSelector*> collideables;
+  collideables.push_back(terminal->getTriangleSelector());
 
   scene::IMetaTriangleSelector* cameraCollisionSelector = 
     smgr->createMetaTriangleSelector();
@@ -125,17 +114,28 @@ int main() {
         levelNode->setPosition(core::vector3df(-1350,-130,-1400));
         levelSelector = smgr->createOctreeTriangleSelector(
                    levelNode->getMesh(), levelNode, 128);
-        collideables[2] = levelSelector;
+        collideables.push_back(levelSelector);
         levelNode->setTriangleSelector(levelSelector);
         levelSelector->drop(); // As soon as we're done with the levelSelector, drop it.
       }
     }
   } else {
-    collideablesNumber = 2;
+    // Metal room
+    scene::IMeshSceneNode *room = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsSolid, core::vector3df(10,160,30), core::vector3df(0,0,0), core::vector3df(30, 30, 30));
+    smgr->getMeshManipulator()->flipSurfaces(room->getMesh());
+    smgr->getMeshManipulator()->recalculateNormals(room->getMesh());
+    room->setMaterialFlag(video::EMF_LIGHTING, true);
+    room->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
+    room->setMaterialTexture(0, driver->getTexture("media/texture.jpg"));
+    room->setTriangleSelector(smgr->createTriangleSelector( room->getMesh(), room ));
+
+    collideables.push_back(room->getTriangleSelector());
   }
-  for(int i=0; i<collideablesNumber; i++){
-    cameraCollisionSelector->addTriangleSelector(collideables[i]);
-  }
+  for(
+      core::list<scene::ITriangleSelector*>::ConstIterator coll = collideables.begin();
+      coll != collideables.end();
+      ++coll
+     ) cameraCollisionSelector->addTriangleSelector((*coll));
 
   //Create camera and pin it to the floor
   scene::ICameraSceneNode *camera = smgr->addCameraSceneNodeFPS(0, 100.0f, .3f, ID_IsNotPickable, 0, 0, true, 3.f);
