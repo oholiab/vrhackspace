@@ -115,3 +115,7 @@ In rough order of priority:
 - Oculus Rift/Google Cardboard style rendering and controls
 - Rendering of interactive filesystem/process/device style constructs a la
   Jurassic Park (THIS IS A UNIX SYSTEM... I KNOW THIS)
+
+###Stuff ticked off
+- Only enter text in a selected terminal
+- Visual terminal selection hint (outline)
