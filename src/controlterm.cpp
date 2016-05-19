@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include "controlterm.h"
 
-
 XKeyEvent createKeyEvent(Display *display,
                          Window &win,
                          Window &winRoot,
@@ -34,8 +33,6 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
-
-// TODO: fail out if display doesn't initialize
 X11Display::X11Display(const char* dispName) 
 {
   display = XOpenDisplay(dispName);
