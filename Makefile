@@ -1,5 +1,6 @@
 levelmodel=models/map-20kdm2.pk3
 media=media/particle.bmp media/texture.jpg
+OBJECTS=controlterm.o main.o
 TARGETS=main termtest.out
 CONTAINER?=vrhs
 
@@ -8,8 +9,7 @@ default: $(TARGETS)
 termtest.out: termtest.cpp controlterm.cpp
 	g++ $< -lX11 -o termtest.out
 
-main.o: main.cpp controlterm.cpp
-	g++ -c $<
+$(OBJECTS): controlterm.h
 
 $(levelmodel):
 	mkdir -p models
@@ -24,11 +24,11 @@ media/particle.bmp: | media
 media/texture.jpg: | media
 	cd media && wget https://grimmwa.re/files/texture.jpg
 
-main: main.o $(levelmodel) $(media)
-	g++ main.o -o main -lIrrlicht -lX11
+main: $(OBJECTS) $(levelmodel) $(media)
+	g++ -o main $(OBJECTS) -lIrrlicht -lX11
 
-clean: main
-	rm -rf $<
+clean:
+	rm -f main $(OBJECTS)
 
 image: Dockerfile screenme.sh
 	docker build -t vrhs .

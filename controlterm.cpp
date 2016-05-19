@@ -1,32 +1,7 @@
-#include <X11/Xlib.h>
-#include <X11/keysym.h>
-#include <irrlicht/Keycodes.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "controlterm.h"
 
-#define RETURN 13
-#define BS 8
-#define SPACE 32
-
-XKeyEvent createKeyEvent(Display *display,
-                         Window &win,
-                         Window &winRoot,
-                         bool press,
-                         int keycode,
-                         int modifiers);
-
-class X11Display {
-  public:
-    Display *display;
-    Window winRoot;
-    X11Display(const char* dispName);
-    ~X11Display();
-    int sendKeyEvent(int keycode, bool keyDown, int mod);
-};
-
-bool IsModKey(int keycode);
-
-int mapKeyCode(int irrcode);
 
 XKeyEvent createKeyEvent(Display *display,
                          Window &win,

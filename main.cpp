@@ -1,6 +1,6 @@
 #include <irrlicht/irrlicht.h>
 #include <irrlicht/driverChoice.h>
-#include "controlterm.cpp"
+#include "controlterm.h"
 
 #define VISIBLE 1
 #define INVISIBLE 0
