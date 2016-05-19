@@ -13,6 +13,26 @@ XKeyEvent createKeyEvent(Display *display,
                          Window &winRoot,
                          bool press,
                          int keycode,
+                         int modifiers);
+
+class X11Display {
+  public:
+    Display *display;
+    Window winRoot;
+    X11Display(const char* dispName);
+    ~X11Display();
+    int sendKeyEvent(int keycode, bool keyDown, int mod);
+};
+
+bool IsModKey(int keycode);
+
+int mapKeyCode(int irrcode);
+
+XKeyEvent createKeyEvent(Display *display,
+                         Window &win,
+                         Window &winRoot,
+                         bool press,
+                         int keycode,
                          int modifiers)
 {
   // Largely lifted from
@@ -39,14 +59,6 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
-class X11Display {
-  public:
-    Display *display;
-    Window winRoot;
-    X11Display(const char* dispName);
-    ~X11Display();
-    int sendKeyEvent(int keycode, bool keyDown, int mod);
-};
 
 // TODO: fail out if display doesn't initialize
 X11Display::X11Display(const char* dispName) 
