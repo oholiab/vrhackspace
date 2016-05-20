@@ -1,5 +1,6 @@
 #include <irrlicht/irrlicht.h>
 #include <irrlicht/driverChoice.h>
+#include <dirent.h>
 #include "controlterm.h"
 
 #define VISIBLE 1
@@ -65,6 +66,14 @@ int main(int argc, char** argv) {
   bool yesQuake = false;
   if(argc > 1){
     if(strcmp(argv[1], "--quake") == 0) yesQuake = true;
+  }
+
+  const char* screenshotFile;
+  DIR* dir;
+  if((dir = opendir("/vrhs")) == NULL){
+    screenshotFile = "/tmp/vrhs/shot.png";
+  } else {
+    screenshotFile = "/vrhs/shot.png";
   }
 
   VREventReceiver receiver;
@@ -158,7 +167,7 @@ int main(int argc, char** argv) {
   scene::ISceneNode* lastSelectedSceneNode = NULL;
   while(device->run()) {
     device->getVideoDriver()->removeTexture(texture);
-    texture = driver->getTexture("/vrhs/shot.png");
+    texture = driver->getTexture(screenshotFile);
     terminal->setMaterialTexture(0, texture);
     // Make the pointy pointer thingy
     core::line3d<f32> ray;
