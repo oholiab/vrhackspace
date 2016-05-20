@@ -1,7 +1,7 @@
-models/*
-media/*
+*/models/*
+*/media/*
 *.swp
 *.swo
-main
+src/main
 *.o
 *.out
