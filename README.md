@@ -42,13 +42,22 @@ As far as I can figure, you need two^Wthree main dependencies:
 - docker
 - g++
 
-I'll be creating a Dockerfile for building this at some point
+Alternatively, if you just want to run the thing, you can just run `make` at the
+top level with docker installed - it will take a while but it'll build all the
+stuff you need and run on X session :0. Be aware that this will leave a
+container running in the background, so it's up to you to learn how to stop
+that!
 
 ####Making it go
 DISCLAIMER: This runs from an ubuntu base image which I have never audited,
 which runs as root and uses volume mounts. If you get owned doing this, it's
 your own stupid fault (in the same way it would be mine if I got owned). You
 have been warned.
+
+Either (as mentioned above) just run `make` in the top level with docker
+installed (which will leave a container running in the background)  just to see 
+it go, or...
+    cd src
 
 In one terminal, to run the container:
     make runc
