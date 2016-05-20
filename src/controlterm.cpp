@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <string>
 #include "controlterm.h"
 
 XKeyEvent createKeyEvent(Display *display,
@@ -32,6 +34,24 @@ XKeyEvent createKeyEvent(Display *display,
 
   return event;
 }
+
+const char* getNextAvailableXDisplayNumber()
+{
+  DIR *dir;
+  struct dirent *ent;
+  size_t largest = 0;
+  if ((dir = opendir("/tmp/.X11-unix/")) != NULL) {
+    while((ent = readdir(dir)) != NULL){
+      char *entry = ent->d_name;
+      puts(ent->d_name);
+      if(entry[0] == 'X') { 
+        int dispNum = std::stoi(ent->d_name);
+      }
+
+
+    }
+  }
+};
 
 X11Display::X11Display(const char* dispName) 
 {
