@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
   scene::ISceneNode* lastSelectedSceneNode = NULL;
   while(device->run()) {
     device->getVideoDriver()->removeTexture(texture);
-    texture = driver->getTexture("/tmp/vrhs/shot.png");
+    texture = driver->getTexture("/vrhs/shot.png");
     terminal->setMaterialTexture(0, texture);
     // Make the pointy pointer thingy
     core::line3d<f32> ray;
