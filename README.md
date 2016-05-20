@@ -57,17 +57,26 @@ have been warned.
 Either (as mentioned above) just run `make` in the top level with docker
 installed (which will leave a container running in the background)  just to see 
 it go, or...
-    cd src
+
+```
+cd src
+```
 
 In one terminal, to run the container:
-    make runc
+```
+make runc
+```
 
 In another, to build and run the application:
-    make run
+```
+make run
+```
 
 Or if you'd prefer to be in an undynamically lit quake level to a scary metal
 cube...
-    make run-quake
+```
+make run-quake
+```
 
 The default flags for running the container include the /workspace volume mount
 which will enable you to work on the code from within the hackspace... Fun fact:
