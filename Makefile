@@ -34,6 +34,7 @@ image: Dockerfile screenme.sh
 	docker build -t vrhs .
 
 runc: image
+	docker rm vrhs || true
 	docker run -v /tmp/vrhs:/vrhs -v /tmp/.X11-unix:/tmp/.X11-unix -v $(shell pwd):/workspace --rm --name vrhs $(CONTAINER)
 
 run: main
