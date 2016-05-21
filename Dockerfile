@@ -5,7 +5,8 @@ RUN apt-get update && apt-get -y install \
   g++ \
   git \
   make \
-  libx11-dev
+  libx11-dev \
+  wget
 ADD src /workspace
 WORKDIR /workspace
 RUN make
