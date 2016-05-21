@@ -37,10 +37,8 @@ So basically it's an enormous shonky hack.
 
 ### Running
 ####Dependencies
-As far as I can figure, you need two^Wthree main dependencies:
-- libirrlicht
-- docker
-- g++
+The dependencies for building on Ubuntu are listed in the Dockerfile in the top
+level. You should be able to extrapolate to your OS.
 
 Alternatively, if you just want to run the thing, you can just run `make` at the
 top level with docker installed - it will take a while but it'll build all the
