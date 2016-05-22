@@ -1,10 +1,14 @@
 version: "2"
+volumes:
+  vrhs:
+    external: false
 services:
   vrhs_volumes:
-    image: scratch
+    image: ubuntu:trusty
+    entrypoint: /bin/bash
     volumes: 
       - "/tmp/.X11-unix:/tmp/.X11-unix"
-      - ".:/workspace"
+      - "vrhs:/vrhs"
   vrhs:
     build: .
     volumes_from: 
