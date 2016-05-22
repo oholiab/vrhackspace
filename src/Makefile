@@ -28,7 +28,7 @@ main: $(OBJECTS) $(levelmodel) $(media)
 	g++ -o main $(OBJECTS) -lIrrlicht -lX11
 
 clean:
-	rm -f main $(OBJECTS)
+	rm -f $(TARGETS) $(OBJECTS)
 
 image: Dockerfile screenme.sh
 	docker build -t vrhs .
