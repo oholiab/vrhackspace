@@ -1,0 +1,17 @@
+version: "2"
+services:
+  vrhs_volumes:
+    image: scratch
+    volumes: 
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+      - ".:/workspace"
+  vrhs:
+    build: .
+    volumes_from: 
+      - vrhs_volumes
+    depends_on: 
+      - vrhs_terminal
+  vrhs_terminal:
+    build: src/
+    volumes_from:
+      - vrhs_volumes
