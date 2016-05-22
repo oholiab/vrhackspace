@@ -20,3 +20,5 @@ class X11Display {
 bool IsModKey(int keycode);
 
 int mapKeyCode(int irrcode);
+
+int getNextAvailableXDisplayNumber();

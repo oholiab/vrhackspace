@@ -3,11 +3,12 @@ media=media/particle.bmp media/texture.jpg
 OBJECTS=controlterm.o main.o
 TARGETS=main termtest.out
 CONTAINER?=vrhs
+CPPFLAGS+= -std=c++11
 
 default: $(TARGETS)
 
 termtest.out: termtest.cpp controlterm.cpp
-	g++ $< -lX11 -o termtest.out
+	g++ $< -lX11 -o termtest.out $(CPPFLAGS)
 
 $(OBJECTS): controlterm.h
 
@@ -25,7 +26,7 @@ media/texture.jpg: | media
 	cd media && wget https://grimmwa.re/files/texture.jpg
 
 main: $(OBJECTS) $(levelmodel) $(media)
-	g++ -o main $(OBJECTS) -lIrrlicht -lX11
+	g++ -o main $(OBJECTS) -lIrrlicht -lX11 $(CPPFLAGS)
 
 clean:
 	rm -f $(TARGETS) $(OBJECTS)

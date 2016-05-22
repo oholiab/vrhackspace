@@ -62,6 +62,7 @@ void setOutlineVisible(scene::ISceneNode *node, int visible){
 }
 
 int main(int argc, char** argv) {
+  puts((const char*)getNextAvailableXDisplayNumber());
   // Uses driverChoiceConsole() from driverChoice.h
   bool yesQuake = false;
   if(argc > 1){

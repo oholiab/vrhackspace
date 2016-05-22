@@ -10,4 +10,5 @@ clean:
 	docker-compose down || true
 
 build:
+	cd src && make clean
 	docker-compose build

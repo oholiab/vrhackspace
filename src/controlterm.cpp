@@ -35,7 +35,7 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
-const char* getNextAvailableXDisplayNumber()
+int getNextAvailableXDisplayNumber()
 {
   DIR *dir;
   struct dirent *ent;
@@ -43,14 +43,13 @@ const char* getNextAvailableXDisplayNumber()
   if ((dir = opendir("/tmp/.X11-unix/")) != NULL) {
     while((ent = readdir(dir)) != NULL){
       char *entry = ent->d_name;
-      puts(ent->d_name);
       if(entry[0] == 'X') { 
         int dispNum = std::stoi(ent->d_name);
+        if(dispNum > largest) largest = dispNum;
       }
-
-
     }
-  }
+  } else return -1;
+  return largest;
 };
 
 X11Display::X11Display(const char* dispName) 
