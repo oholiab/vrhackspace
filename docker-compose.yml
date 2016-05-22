@@ -15,6 +15,8 @@ services:
       - vrhs_volumes
     depends_on: 
       - vrhs_terminal
+    environment:
+      - DISPLAY=:0
   vrhs_terminal:
     build: src/
     volumes_from:
