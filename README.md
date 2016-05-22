@@ -40,11 +40,15 @@ So basically it's an enormous shonky hack.
 The dependencies for building on Ubuntu are listed in the Dockerfile in the top
 level. You should be able to extrapolate to your OS.
 
-Alternatively, if you just want to run the thing, you can just run `make` at the
-top level with docker installed - it will take a while but it'll build all the
-stuff you need and run on X session :0. Be aware that this will leave a
-container running in the background, so it's up to you to learn how to stop
-that!
+Alternatively, if you just want to run the thing, the dependencies are:
+- docker
+- docker-compose
+
+You can just run `make` at the top level with docker installed - it will take a
+while but it'll build all the stuff you need and run on X session :0. Be aware
+that this will leave a container running in the background if you don't let it
+close down properly afterwards, so ensure you let it shut down or run `make
+clean` after you're done.
 
 ####Making it go
 DISCLAIMER: This runs from an ubuntu base image which I have never audited,
@@ -52,7 +56,7 @@ which runs as root and uses volume mounts. If you get owned doing this, it's
 your own stupid fault (in the same way it would be mine if I got owned). You
 have been warned.
 
-Either (as mentioned above) just run `make` in the top level with docker
+Either (as mentioned above) just run `make` in the top level with docker-compose
 installed (which will leave a container running in the background)  just to see 
 it go, or...
 
