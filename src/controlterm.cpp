@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <dirent.h>
-#include <string>
+#include <string.h>
 #include "controlterm.h"
 
 XKeyEvent createKeyEvent(Display *display,
@@ -35,6 +35,20 @@ XKeyEvent createKeyEvent(Display *display,
   return event;
 }
 
+int dispSocketNameToInt(const char* sockName)
+{
+  int sockNum = 0;
+  int asciiZero = 48;
+  int asciiNine = 57;
+  size_t len = strlen(sockName);
+  for(int i = 0; i < len; i++){
+    if(asciiZero <= (int)sockName[i] && (int)sockName[i] <= asciiNine){
+      sockNum += ((int)sockName[i] - asciiZero);// * (10 * (len - (i + 1)));
+    }
+  }
+  return(sockNum);
+}
+
 int getNextAvailableXDisplayNumber()
 {
   DIR *dir;
@@ -42,14 +56,16 @@ int getNextAvailableXDisplayNumber()
   size_t largest = 0;
   if ((dir = opendir("/tmp/.X11-unix/")) != NULL) {
     while((ent = readdir(dir)) != NULL){
-      char *entry = ent->d_name;
+      char *entry;
+      if((entry = ent->d_name) == NULL) continue;
       if(entry[0] == 'X') { 
-        int dispNum = std::stoi(ent->d_name);
+        int dispNum = dispSocketNameToInt(entry);
         if(dispNum > largest) largest = dispNum;
       }
+      printf("%d\n", largest);
     }
   } else return -1;
-  return largest;
+  return(largest + 1);
 };
 
 X11Display::X11Display(const char* dispName) 
