@@ -6,7 +6,7 @@
 #define VISIBLE 1
 #define INVISIBLE 0
 
-const char* disp = ":1";
+char disp[20];
 
 using namespace irr;
 
@@ -17,13 +17,13 @@ enum {
   IDFlag_IsOutline = 1 << 2
 };
 
-X11Display xdisp(disp);
+X11Display *currentDisp = NULL;
 scene::ISceneNode* selectedSceneNode = NULL;
 
 class VREventReceiver : public IEventReceiver {
   public:
     virtual bool OnEvent(const SEvent& event){
-      if(selectedSceneNode && event.EventType == irr::EET_KEY_INPUT_EVENT){
+      if(currentDisp != NULL && selectedSceneNode && event.EventType == irr::EET_KEY_INPUT_EVENT){
         if(IsModKey(event.KeyInput.Key)){
           if(event.KeyInput.PressedDown){
             //FIXME: shit sometimes gets weird here
@@ -33,7 +33,7 @@ class VREventReceiver : public IEventReceiver {
           }
         } else {
           KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
-          xdisp.sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown, CurrentMod);
+          currentDisp->sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown, CurrentMod);
         }
       }
       return false;
@@ -62,7 +62,8 @@ void setOutlineVisible(scene::ISceneNode *node, int visible){
 }
 
 int main(int argc, char** argv) {
-  puts((const char*)getNextAvailableXDisplayNumber());
+  sprintf(disp, ":%d", getNextAvailableXDisplayNumber() - 1);
+  X11Display currentDisp(disp);
   // Uses driverChoiceConsole() from driverChoice.h
   bool yesQuake = false;
   if(argc > 1){
