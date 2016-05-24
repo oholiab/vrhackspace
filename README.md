@@ -35,6 +35,9 @@ So basically it's an enormous shonky hack.
 
 ![R2D2 where are you? Showing off the outline to select a term.](https://grimmwa.re/files/outlinehackspace.png)
 
+## License
+tl;dr, 3 clause BSD license
+
 ### Running
 ####Dependencies
 The dependencies for building on Ubuntu are listed in the Dockerfile in the top
