@@ -6,7 +6,7 @@
 #define VISIBLE 1
 #define INVISIBLE 0
 
-char disp[20];
+char* disp = NULL;
 
 using namespace irr;
 
@@ -61,8 +61,18 @@ void setOutlineVisible(scene::ISceneNode *node, int visible){
   }
 }
 
+
 int main(int argc, char** argv) {
-  sprintf(disp, ":%d", getNextAvailableXDisplayNumber() - 1);
+  // Shouldn't need to check for -1... X11Display init should fail out
+  int currDispNum = getNextAvailableXDisplayNumber() - 1;
+  int dispNumDigits = 0;
+  if(currDispNum == 0){
+    dispNumDigits = 1;
+  }else{
+    dispNumDigits = floor(log10(currDispNum)) + 1;
+  }
+  disp = (char*)malloc(dispNumDigits + 2 * sizeof(char));
+  sprintf(disp, ":%d", currDispNum);
   X11Display currentDisp(disp);
   // Uses driverChoiceConsole() from driverChoice.h
   bool yesQuake = false;
