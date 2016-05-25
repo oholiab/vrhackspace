@@ -1,5 +1,9 @@
-
 #include "term.h"
+
+// We want to either turn term into an extension of iscenenode with a couple of
+// extra parameters (terminal id and the like) and extra methods (initialiser
+// to spin up the container/vm) or we want to create a new object or struct with
+// the pointer to the iscenenode as an attribute
 
 scene::IMeshSceneNode* addTerminal(scene::ISceneManager* smgr){
   // Set up terminal
