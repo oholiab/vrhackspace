@@ -1,6 +1,6 @@
 levelmodel=models/map-20kdm2.pk3
 media=media/particle.bmp media/texture.jpg
-OBJECTS=controlterm.o main.o
+OBJECTS=controlterm.o main.o term.o
 TARGETS=main termtest.out
 CONTAINER?=vrhs
 CPPFLAGS+= -std=c++11

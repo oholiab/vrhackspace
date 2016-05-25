@@ -1,7 +1,13 @@
 #include <irrlicht/irrlicht.h>
+#define IRR_INCLUDE
 #include <irrlicht/driverChoice.h>
 #include <dirent.h>
 #include "controlterm.h"
+#include "term.h"
+#ifndef IDS_INCLUDE
+#include "ids.h"
+#define IDS_INCLUDE
+#endif
 
 #define VISIBLE 1
 #define INVISIBLE 0
@@ -9,13 +15,6 @@
 char* disp = NULL;
 
 using namespace irr;
-
-enum {
-  ID_IsNotPickable = 0,
-  IDFlag_IsSolid = 1 << 0,
-  IDFlag_IsInteractable = 1 << 1,
-  IDFlag_IsOutline = 1 << 2
-};
 
 X11Display *currentDisp = NULL;
 scene::ISceneNode* selectedSceneNode = NULL;
@@ -61,18 +60,6 @@ void setOutlineVisible(scene::ISceneNode *node, int visible){
   }
 }
 
-scene::IMeshSceneNode* addTerminal(scene::ISceneManager* smgr){
-  // Set up terminal
-  scene::IMeshSceneNode *terminal = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsInteractable, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
-  terminal->setMaterialFlag(video::EMF_LIGHTING, false); // because monitors are light sources
-  terminal->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-  terminal->setTriangleSelector( smgr->createTriangleSelector( terminal->getMesh(), terminal ));
-  scene::SMesh* outline = smgr->getMeshManipulator()->createMeshCopy(terminal->getMesh());
-  smgr->getMeshManipulator()->flipSurfaces(outline);
-  outline->setMaterialFlag(video::EMF_LIGHTING, false);
-  smgr->getMeshManipulator()->recalculateNormals(outline);
-  scene::IMeshSceneNode *outlineNode = smgr->addMeshSceneNode(outline, terminal, ID_IsNotPickable | IDFlag_IsOutline, core::vector3df(0,0,0), core::vector3df(0,0,0), core::vector3df(1.05,1.05,1.05));
-}
 
 int main(int argc, char** argv) {
   // Shouldn't need to check for -1... X11Display init should fail out
