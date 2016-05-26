@@ -71,9 +71,10 @@ int main(int argc, char** argv) {
   disp = (char*)malloc((dispNumDigits + 2) * sizeof(char));
   sprintf(disp, ":%d", currDispNum);
   printf("Using display %s\n", disp);
-  X11Display currentDisp(disp);
-  //X11Display aDisp(disp);
-  //currentDisp = &aDisp;
+
+  // FIXME: is this the right way to do it?
+  X11Display aDisp(disp);
+  currentDisp = &aDisp;
   // Uses driverChoiceConsole() from driverChoice.h
   bool yesQuake = false;
   if(argc > 1){
