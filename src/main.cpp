@@ -25,7 +25,6 @@ class VREventReceiver : public IEventReceiver {
       if(currentDisp != NULL && selectedSceneNode && event.EventType == irr::EET_KEY_INPUT_EVENT){
         if(IsModKey(event.KeyInput.Key)){
           if(event.KeyInput.PressedDown){
-            //FIXME: shit sometimes gets weird here
             CurrentMod |= mapKeyCode(event.KeyInput.Key);
           } else {
             CurrentMod &= ~mapKeyCode(event.KeyInput.Key);
@@ -42,8 +41,7 @@ class VREventReceiver : public IEventReceiver {
     }
   private:
     bool KeyIsDown[KEY_KEY_CODES_COUNT];
-    // FIXME: can initialise to nonzero
-    int CurrentMod;
+    int CurrentMod = 0;
 };
 
 void setOutlineVisible(scene::ISceneNode *node, int visible){
@@ -74,6 +72,8 @@ int main(int argc, char** argv) {
   sprintf(disp, ":%d", currDispNum);
   printf("Using display %s\n", disp);
   X11Display currentDisp(disp);
+  //X11Display aDisp(disp);
+  //currentDisp = &aDisp;
   // Uses driverChoiceConsole() from driverChoice.h
   bool yesQuake = false;
   if(argc > 1){
