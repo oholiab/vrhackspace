@@ -62,7 +62,6 @@ int getNextAvailableXDisplayNumber()
         int dispNum = dispSocketNameToInt(entry);
         if(dispNum > largest) largest = dispNum;
       }
-      printf("%d\n", largest);
     }
   } else return -1;
   return(largest + 1);

@@ -70,8 +70,9 @@ int main(int argc, char** argv) {
   }else{
     dispNumDigits = floor(log10(currDispNum)) + 1;
   }
-  disp = (char*)malloc(dispNumDigits + 2 * sizeof(char));
+  disp = (char*)malloc((dispNumDigits + 2) * sizeof(char));
   sprintf(disp, ":%d", currDispNum);
+  printf("Using display %s\n", disp);
   X11Display currentDisp(disp);
   // Uses driverChoiceConsole() from driverChoice.h
   bool yesQuake = false;
