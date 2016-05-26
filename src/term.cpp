@@ -16,4 +16,5 @@ scene::IMeshSceneNode* addTerminal(scene::ISceneManager* smgr){
   outline->setMaterialFlag(video::EMF_LIGHTING, false);
   smgr->getMeshManipulator()->recalculateNormals(outline);
   scene::IMeshSceneNode *outlineNode = smgr->addMeshSceneNode(outline, terminal, ID_IsNotPickable | IDFlag_IsOutline, core::vector3df(0,0,0), core::vector3df(0,0,0), core::vector3df(1.05,1.05,1.05));
+  return terminal;
 }
