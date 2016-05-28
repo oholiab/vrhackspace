@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
   scene::ISceneManager* smgr = device->getSceneManager();
   gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-  scene::IMeshSceneNode* terminal = addTerminal(smgr);
+  Terminal terminal = Terminal(smgr);
 
   // Add lighting
   scene::ISceneNode* light = smgr->addLightSceneNode(0, core::vector3df(10,10,10),
@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
   light->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
 
   core::list<scene::ITriangleSelector*> collideables;
-  collideables.push_back(terminal->getTriangleSelector());
+  collideables.push_back(terminal.node->getTriangleSelector());
 
   scene::IMetaTriangleSelector* cameraCollisionSelector = 
     smgr->createMetaTriangleSelector();
@@ -172,7 +172,7 @@ int main(int argc, char** argv) {
   while(device->run()) {
     device->getVideoDriver()->removeTexture(texture);
     texture = driver->getTexture(screenshotFile);
-    terminal->setMaterialTexture(0, texture);
+    terminal.node->setMaterialTexture(0, texture);
     // Make the pointy pointer thingy
     core::line3d<f32> ray;
     ray.start = camera->getPosition();

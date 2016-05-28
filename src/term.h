@@ -8,4 +8,9 @@
 #endif
 
 using namespace irr;
-scene::IMeshSceneNode* addTerminal(scene::ISceneManager* smgr);
+class Terminal {
+  public:
+    Terminal(scene::ISceneManager* smgr);
+    ~Terminal();
+    scene::IMeshSceneNode* node;
+};
