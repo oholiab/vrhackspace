@@ -1,13 +1,14 @@
 #!/bin/bash
+export DISPLAY=$2
 cd $(dirname $1)
 Xvfb :1 -screen 0 1024x768x16 &
 outfile=$(basename $1)
 tmpfile1=tmpshot1.png
 tmpfile2=tmpshot2.png
 sleep 3s
-DISPLAY=:1 stterm &
+stterm &
 sleep 3s
-DISPLAY=:1 xte 'mousemove 100 100'
+xte 'mousemove 100 100'
 
 while true; do
   if [ "$tmpfile" = "$tmpfile1" ]; then
@@ -15,6 +16,6 @@ while true; do
   else
     tmpfile=$tmpfile1
   fi
-  DISPLAY=:1 scrot $tmpfile
+  scrot $tmpfile
   ln -s -f $tmpfile $outfile
 done

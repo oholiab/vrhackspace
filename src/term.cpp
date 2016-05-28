@@ -28,7 +28,11 @@ Terminal::Terminal(scene::ISceneManager* smgr):
   }
   dispName  = (char*)malloc((dispNumDigits + 2) * sizeof(char));
   sprintf(dispName, ":%d", dispNum);
+  printf("docker run -d --name vrhs_term_%d vrhs screenme.sh /vrhs/shot.png %s\n",
+      dispNum,
+      dispName);
 }
 
 Terminal::~Terminal(){
+  printf("docker kill vrhs_term_%d\n", dispNum);
 }
