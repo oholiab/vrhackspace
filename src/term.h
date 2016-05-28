@@ -24,5 +24,6 @@ class Terminal {
     int dispNum = -1;
     char* dispName = NULL;
     X11Display* display = NULL;
+    X11Display* getDisp();
   private:
 };

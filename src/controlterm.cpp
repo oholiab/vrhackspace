@@ -72,7 +72,7 @@ X11Display::X11Display(const char* dispName)
   display = XOpenDisplay(dispName);
   if(NULL == display) {
     printf("invalid X11 display: %s\n", dispName);
-    throw;
+    return;
   }
   winRoot = XDefaultRootWindow(display);
 }

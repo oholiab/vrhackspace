@@ -19,13 +19,14 @@ char* disp = NULL;
 
 using namespace irr;
 
-X11Display *currentDisp = NULL;
+Terminal *currentTerm = NULL;
 scene::ISceneNode* selectedSceneNode = NULL;
 
 class VREventReceiver : public IEventReceiver {
   public:
     virtual bool OnEvent(const SEvent& event){
-      if(currentDisp != NULL && selectedSceneNode && event.EventType == irr::EET_KEY_INPUT_EVENT){
+      if(currentTerm == NULL) return false;
+      if(currentTerm->display != NULL && selectedSceneNode && event.EventType == irr::EET_KEY_INPUT_EVENT){
         if(IsModKey(event.KeyInput.Key)){
           if(event.KeyInput.PressedDown){
             CurrentMod |= mapKeyCode(event.KeyInput.Key);
@@ -34,7 +35,7 @@ class VREventReceiver : public IEventReceiver {
           }
         } else {
           KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
-          currentDisp->sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown, CurrentMod);
+          currentTerm->display->sendKeyEvent(mapKeyCode(event.KeyInput.Key), event.KeyInput.PressedDown, CurrentMod);
         }
       }
       return false;
@@ -102,7 +103,6 @@ int main(int argc, char** argv) {
   // FIXME: is this the right way to do it?
   X11Display aDisp(disp);
   terminal.display = &aDisp;
-  currentDisp = &aDisp;
 
   // Add lighting
   scene::ISceneNode* light = smgr->addLightSceneNode(0, core::vector3df(10,10,10),
