@@ -6,6 +6,10 @@
 #include "ids.h"
 #define IDS_INCLUDE
 #endif
+#ifndef CONTROLTERM_INCLUDE
+#include "controlterm.h"
+#define CONTROLTERM_INCLUDE
+#endif
 
 using namespace irr;
 class Terminal {
@@ -13,4 +17,8 @@ class Terminal {
     Terminal(scene::ISceneManager* smgr);
     ~Terminal();
     scene::IMeshSceneNode* node;
+    //FIXME: should be independent of platform
+    int dispNum = -1;
+    char* dispName = NULL;
+    X11Display* display = NULL;
 };

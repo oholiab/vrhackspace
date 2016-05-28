@@ -2,7 +2,10 @@
 #define IRR_INCLUDE
 #include <irrlicht/driverChoice.h>
 #include <dirent.h>
+#ifndef CONTROLTERM_INCLUDE
 #include "controlterm.h"
+#define CONTROLTERM_INCLUDE
+#endif
 #include "term.h"
 #ifndef IDS_INCLUDE
 #include "ids.h"
@@ -72,9 +75,6 @@ int main(int argc, char** argv) {
   sprintf(disp, ":%d", currDispNum);
   printf("Using display %s\n", disp);
 
-  // FIXME: is this the right way to do it?
-  X11Display aDisp(disp);
-  currentDisp = &aDisp;
   // Uses driverChoiceConsole() from driverChoice.h
   bool yesQuake = false;
   if(argc > 1){
@@ -99,6 +99,10 @@ int main(int argc, char** argv) {
   gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
   Terminal terminal = Terminal(smgr);
+  // FIXME: is this the right way to do it?
+  X11Display aDisp(disp);
+  terminal.display = &aDisp;
+  currentDisp = &aDisp;
 
   // Add lighting
   scene::ISceneNode* light = smgr->addLightSceneNode(0, core::vector3df(10,10,10),

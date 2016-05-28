@@ -5,7 +5,9 @@
 // to spin up the container/vm) or we want to create a new object or struct with
 // the pointer to the iscenenode as an attribute
 
-Terminal::Terminal(scene::ISceneManager* smgr){
+Terminal::Terminal(scene::ISceneManager* smgr):
+  dispNum(getNextAvailableXDisplayNumber())
+{
   // Set up terminal
   scene::IMeshSceneNode *terminal = smgr->addCubeSceneNode(15.0f, 0, IDFlag_IsInteractable, core::vector3df(10,-10,10), core::vector3df(0,0,0), core::vector3df(4, 4, 1));
   terminal->setMaterialFlag(video::EMF_LIGHTING, false); // because monitors are light sources
@@ -17,6 +19,15 @@ Terminal::Terminal(scene::ISceneManager* smgr){
   smgr->getMeshManipulator()->recalculateNormals(outline);
   scene::IMeshSceneNode *outlineNode = smgr->addMeshSceneNode(outline, terminal, ID_IsNotPickable | IDFlag_IsOutline, core::vector3df(0,0,0), core::vector3df(0,0,0), core::vector3df(1.05,1.05,1.05));
   node = terminal;
+
+  int dispNumDigits = 0;
+  if(dispNum == 0){
+    dispNumDigits = 1;
+  }else{
+    dispNumDigits = floor(log10(dispNum)) + 1;
+  }
+  dispName  = (char*)malloc((dispNumDigits + 2) * sizeof(char));
+  sprintf(dispName, ":%d", dispNum);
 }
 
 Terminal::~Terminal(){
