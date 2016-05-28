@@ -10,7 +10,7 @@ default: $(TARGETS)
 termtest.out: termtest.cpp controlterm.cpp
 	g++ $< -lX11 -o termtest.out $(CPPFLAGS)
 
-$(OBJECTS): controlterm.h
+$(OBJECTS): controlterm.h term.h
 
 $(levelmodel):
 	mkdir -p models

@@ -1,4 +1,5 @@
 #include "term.h"
+#include <string.h>
 
 // We want to either turn term into an extension of iscenenode with a couple of
 // extra parameters (terminal id and the like) and extra methods (initialiser
@@ -28,11 +29,33 @@ Terminal::Terminal(scene::ISceneManager* smgr):
   }
   dispName  = (char*)malloc((dispNumDigits + 2) * sizeof(char));
   sprintf(dispName, ":%d", dispNum);
-  printf("docker run -d --name vrhs_term_%d vrhs screenme.sh /vrhs/shot.png %s\n",
+  char buf[1024];
+  sprintf(buf, "docker run -d --name vrhs_term_%d vrhs /screenme.sh /vrhs/shot.png %s\n",
       dispNum,
       dispName);
+  launchCommand = (char*)malloc(strlen(buf) + 1);
+  strcpy(launchCommand, buf);
+  sprintf(buf, "docker kill vrhs_term_%d\n", dispNum);
+  stopCommand = (char*)malloc(strlen(buf) + 1);
+  strcpy(stopCommand, buf);
+  printf("%s\n",stopCommand);
+  sprintf(buf, "docker rm vrhs_term_%d\n", dispNum);
+  rmCommand = (char*)malloc(strlen(buf) + 1);
+  strcpy(rmCommand, buf);
+
+  int exit = system(launchCommand);
+  if(0 != exit){
+    printf("command failed: %s\n", launchCommand);
+  }
 }
 
 Terminal::~Terminal(){
-  printf("docker kill vrhs_term_%d\n", dispNum);
+  int exit = system(stopCommand);
+  if(0 != exit){
+    printf("command failed: %s\n", stopCommand);
+  }
+  exit = system(rmCommand);
+  if(0 != exit){
+    printf("command failed: %s\n", rmCommand);
+  }
 }

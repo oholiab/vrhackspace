@@ -13,6 +13,9 @@
 
 using namespace irr;
 class Terminal {
+  char* launchCommand;
+  char* stopCommand;
+  char* rmCommand;
   public:
     Terminal(scene::ISceneManager* smgr);
     ~Terminal();
@@ -21,4 +24,5 @@ class Terminal {
     int dispNum = -1;
     char* dispName = NULL;
     X11Display* display = NULL;
+  private:
 };
